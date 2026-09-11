@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Quote } from "lucide-react";
 import { getServerSession } from "next-auth";
-import { StatusModerasi } from "@prisma/client";
+import { StatusModerasi } from "@/app/generated/prisma/client";
 import { authOptions } from "@/lib/authOptions";
 import { prisma } from "@/lib/prisma";
 

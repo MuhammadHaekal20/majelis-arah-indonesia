@@ -1,7 +1,7 @@
 import { adminActionClass } from "@/components/admin/AdminButton";
 import { moderateGagasan } from "@/lib/actions/gagasan";
 import { prisma } from "@/lib/prisma";
-import { StatusModerasi } from "@prisma/client";
+import { StatusModerasi } from "@/app/generated/prisma/client";
 
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("id-ID", {

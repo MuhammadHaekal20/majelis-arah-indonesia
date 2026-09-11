@@ -1,7 +1,7 @@
 "use server";
 
 import bcrypt from "bcrypt";
-import { Role } from "@prisma/client";
+import { Role } from "@/app/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 
 export type RegisterState = {

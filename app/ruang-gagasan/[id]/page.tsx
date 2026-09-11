@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { StatusModerasi } from "@prisma/client";
+import { StatusModerasi } from "@/app/generated/prisma/client";
 import { FormBalasanGagasan } from "@/components/gagasan/FormBalasanGagasan";
 import { prisma } from "@/lib/prisma";
 

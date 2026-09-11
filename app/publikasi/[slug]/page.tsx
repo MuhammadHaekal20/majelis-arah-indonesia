@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { StatusModerasi } from "@prisma/client";
+import { StatusModerasi } from "@/app/generated/prisma/client";
 import { FormKomentar } from "@/components/publikasi/FormKomentar";
 import { prisma } from "@/lib/prisma";
 

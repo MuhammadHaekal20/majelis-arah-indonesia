@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Quote } from "lucide-react";
-import { StatusModerasi } from "@prisma/client";
+import { StatusModerasi } from "@/app/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 
 function formatDate(date: Date) {
