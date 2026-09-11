@@ -24,6 +24,8 @@ ADMIN_EMAIL=admin@arahindonesia.org
 
 SMTP opsional (`SMTP_*`). `NEXTAUTH_URL` harus URL publik HTTPS.
 
+Di Hostinger, isi variabel **tanpa** tanda kutip di nilai. Panel menyuntikkan `DATABASE_URL='postgres://…'` secara literal; Prisma lalu gagal dengan `Can't reach database server at base`. Benar: `DATABASE_URL=postgres://…`
+
 Build command: `npm run build` (sudah menjalankan `prisma generate`).  
 Start command: `npm start` (bind `0.0.0.0`; `PORT` dari platform).  
 Node: 20 atau 22 (lihat `.nvmrc`).

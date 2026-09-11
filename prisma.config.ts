@@ -1,6 +1,7 @@
 // Prisma ORM 7 — URL datasource ada di sini, bukan di schema.prisma
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
+import { databaseUrlOrDummy } from "./lib/env";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -10,8 +11,6 @@ export default defineConfig({
   },
   datasource: {
     // Hostinger/CI: generate tidak boleh gagal hanya karena env belum ter-inject.
-    url:
-      process.env.DATABASE_URL ??
-      "postgresql://postgres:postgres@127.0.0.1:5432/arah_indonesia?schema=public",
+    url: databaseUrlOrDummy(),
   },
 });

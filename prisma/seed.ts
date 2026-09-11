@@ -6,9 +6,12 @@ import {
   Role,
   StatusModerasi,
 } from "../app/generated/prisma/client";
+import { databaseUrl, sanitizeRuntimeEnv } from "../lib/env";
+
+sanitizeRuntimeEnv();
 
 const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: databaseUrl(),
 });
 
 const prisma = new PrismaClient({ adapter });

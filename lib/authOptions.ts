@@ -2,7 +2,10 @@ import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcrypt";
 import type { Role } from "@/app/generated/prisma/client";
+import { sanitizeRuntimeEnv } from "@/lib/env";
 import { prisma } from "@/lib/prisma";
+
+sanitizeRuntimeEnv();
 
 export const authOptions: NextAuthOptions = {
   session: {
