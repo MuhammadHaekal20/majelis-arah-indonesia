@@ -1,0 +1,34 @@
+---
+description: GitHub Flow — agent wajib branch, commit, push, dan PR tanpa menunggu perintah
+alwaysApply: true
+---
+
+# Git Workflow (eksekusi otomatis)
+
+Remote: `https://github.com/MuhammadHaekal20/majelis-arah-indonesia.git`  
+Model: **GitHub Flow**. `main` selalu production-ready.
+
+## Wajib tanpa diminta
+Setelah pekerjaan kode selesai (bukan jawaban Q&A murni), agent **langsung**:
+1. Jika HEAD `main`/`master` → `git checkout -b <type>/<ringkas>`
+2. Stage file relevan saja
+3. Commit (Conventional Commits)
+4. `git push -u origin HEAD`
+5. `gh pr create` ke `main` jika branch bukan `main`
+
+Jangan tanya "mau di-commit?" / "mau dibuatkan PR?". Jangan menunggu user.
+
+## Branch
+`feature/` `fix/` `chore/` `hotfix/` — contoh: `fix/login-redirect`
+
+## Commit
+- Fokus mengapa: `feat: …` `fix: …` `chore: …`
+- Jangan `--no-verify`, jangan `push --force` ke `main`
+- Jangan commit `.env`, kredensial, `node_modules`, `.next`, `app/generated/prisma`
+
+## PR
+- Satu tujuan, isi `.github/PULL_REQUEST_TEMPLATE.md`, CI harus bisa jalan
+- Jangan merge ke `main` kecuali user minta merge
+
+## Bootstrap (hanya repo remote kosong)
+Commit pertama boleh ke `main`, lalu `git push -u origin main`. Setelah itu semua perubahan lewat branch + PR.

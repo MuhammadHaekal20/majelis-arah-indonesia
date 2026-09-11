@@ -1,26 +1,95 @@
 @import "tailwindcss";
+@config "../tailwind.config.ts";
+@plugin "@tailwindcss/typography";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --mai-bg: #f8fafc;
+  --mai-surface: #ffffff;
+  --mai-mist: #f1f5f9;
+  --mai-ink: #0f172a;
+  --mai-muted: #64748b;
+  --mai-line: #e2e8f0;
+  --mai-gold: #f96b2a;
+  --mai-cream: #ffffff;
+  --mai-accent: #75b13d;
+  --background: var(--mai-bg);
+  --foreground: var(--mai-ink);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-mai-blue: #41b6e2;
+  --color-mai-green: #75b13d;
+  --color-mai-red: #f96b2a;
+  --color-mai-dark: #0f172a;
+  --color-primary: #41b6e2;
+  --color-primary-dark: #0d7eb0;
+  --color-primary-light: #7dd3f0;
+  --color-secondary: #75b13d;
+  --color-secondary-dark: #5a8f2e;
+  --color-secondary-light: #9ccc63;
+  --color-accent: #f96b2a;
+  --color-accent-dark: #d9531a;
+  --color-accent-light: #ff8f57;
+  --color-mai-navy: #0f172a;
+  --font-sans: var(--font-figtree);
+  --font-display: var(--font-cormorant);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--mai-bg);
+  color: var(--mai-ink);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+@keyframes mai-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mai-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.mai-rise {
+  animation: mai-rise 0.55s ease-out both;
+}
+
+.mai-fade {
+  animation: mai-fade 0.7s ease-out both;
+}
+
+.rich-text-editor .ql-toolbar {
+  border-color: #e2e8f0;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.rich-text-editor .ql-container {
+  min-height: 240px;
+  border-color: #e2e8f0;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+.rich-text-editor .ql-editor {
+  min-height: 240px;
+}
+
+.rich-text-editor .ql-editor img {
+  max-width: 100%;
+  border-radius: 0.5rem;
 }

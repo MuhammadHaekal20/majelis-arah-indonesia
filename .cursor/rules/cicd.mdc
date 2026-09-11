@@ -1,0 +1,29 @@
+---
+description: CI/CD — quality gate di PR, secret di GitHub Secrets, jangan skip CI
+globs: "{.github/**,.env*,prisma.config.ts,package.json}"
+alwaysApply: true
+---
+
+# CI/CD
+
+Pipeline: **PR → CI hijau → review → merge ke main → deploy**. Tidak ada deploy dari laptop.
+
+## Continuous Integration
+- Workflow: `.github/workflows/ci.yml` (lint, Prisma generate, typecheck).
+- Jangan melemahkan atau melewati CI untuk mengejar merge.
+- `next build` butuh `DATABASE_URL` nyata; jangan anggap build lokal = lolos CI.
+- Setelah ubah `package.json` / Prisma schema, pastikan `npm ci` + `npx prisma generate` masih jalan.
+
+## Secrets & config
+- Secret hanya di `.env` lokal atau GitHub Secrets / host (Vercel, dll.).
+- Commit `.env.example` saja. Dilarang commit `.env`.
+- Prisma 7: URL ada di `prisma.config.ts` via `env("DATABASE_URL")`, bukan di `schema.prisma`.
+
+## Continuous Delivery
+- Deploy otomatis dari `main` setelah merge (hosting belum wajib di-setup di repo).
+- Migrasi DB produksi: `prisma migrate deploy`, bukan `db push` / `db seed`.
+- Seed (`admin123`, akun uji) hanya untuk development.
+
+## Saat mengubah CI
+- Tetap pakai `npm ci` (bukan `npm install`).
+- Jangan simpan password database di YAML workflow.

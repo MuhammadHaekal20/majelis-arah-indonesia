@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../app/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  GUEST
+  MEMBER
+  ADMIN
+}
+
+enum StatusModerasi {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id         String   @id @default(cuid())
+  name       String
+  email      String   @unique
+  password   String
+  role       Role     @default(GUEST)
+  created_at DateTime @default(now())
+
+  publikasi       Publikasi[]
+  diskusi         Diskusi[]
+  gagasan         GagasanThread[]
+  balasanGagasan  BalasanGagasan[]
+}
+
+model Presidium {
+  id         String   @id @default(cuid())
+  nama       String
+  gelar      String
+  urutan     Int      @default(0)
+  foto_url   String
+  created_at DateTime @default(now())
+}
+
+model Publikasi {
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  judul      String
+  konten     String   @db.Text
+  excerpt    String
+  cover_url  String
+  author_id  String
+  created_at DateTime @default(now())
+
+  author  User      @relation(fields: [author_id], references: [id], onDelete: Cascade)
+  diskusi Diskusi[]
+}
+
+model Diskusi {
+  id              String         @id @default(cuid())
+  konten          String         @db.Text
+  status_moderasi StatusModerasi @default(PENDING)
+  publikasi_id    String
+  user_id         String
+  created_at      DateTime       @default(now())
+
+  publikasi Publikasi @relation(fields: [publikasi_id], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model GagasanThread {
+  id              String         @id @default(cuid())
+  judul           String
+  konten          String         @db.Text
+  status_moderasi StatusModerasi @default(PENDING)
+  author_id       String
+  created_at      DateTime       @default(now())
+
+  author  User             @relation(fields: [author_id], references: [id], onDelete: Cascade)
+  balasan BalasanGagasan[]
+}
+
+model BalasanGagasan {
+  id         String   @id @default(cuid())
+  konten     String   @db.Text
+  gagasan_id String
+  user_id    String
+  created_at DateTime @default(now())
+
+  gagasan GagasanThread @relation(fields: [gagasan_id], references: [id], onDelete: Cascade)
+  user    User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model PesanKontak {
+  id         String   @id @default(cuid())
+  nama       String
+  email      String
+  pesan      String   @db.Text
+  is_read    Boolean  @default(false)
+  created_at DateTime @default(now())
+}
+
+model PengaturanWeb {
+  id         String   @id @default(cuid())
+  key        String   @unique
+  value      String   @db.Text
+  updated_at DateTime @updatedAt
+}

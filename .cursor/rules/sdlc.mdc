@@ -1,0 +1,28 @@
+---
+description: SDLC — rencanakan, implementasikan, verifikasi, lalu review lewat PR
+alwaysApply: true
+---
+
+# SDLC (MAI Portal)
+
+Ikuti siklus pendek: **Requirements → Design → Implement → Verify → Review → Release**. Jangan lompat ke coding untuk perubahan non-trivial.
+
+## Requirements & design
+- Baca `PROJECT_CONTEXT.md` dan `CONTRIBUTING.md` sebelum mengubah kode.
+- Konfirmasi ruang lingkup. Jangan tambah fitur, refactor, atau ganti library di luar permintaan.
+- Untuk auth, schema Prisma, atau alur moderasi: jelaskan dampaknya dulu, baru ubah.
+
+## Implement
+- Perubahan kecil dan terfokus. Satu concern per PR.
+- Ikuti pola existing (`lib/actions/*`, App Router, Server Actions).
+- Jangan edit `app/generated/prisma/**`. Setelah schema berubah: `npx prisma generate`.
+- Jangan commit `.env`, kredensial, atau dump database.
+
+## Verify
+- Jalankan lint/typecheck yang relevan (`npm run lint`, `npm run typecheck`).
+- Untuk UI: verifikasi alur yang diubah, bukan hanya screenshot.
+- Cek regresi di halaman yang memakai state/data yang sama.
+
+## Review & release
+- Tidak ada commit langsung ke `main`/`master`. Buat branch + Pull Request.
+- CI harus hijau sebelum merge. Production hanya dari branch utama yang sudah di-review.
