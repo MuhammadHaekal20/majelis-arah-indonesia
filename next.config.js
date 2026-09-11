@@ -1,13 +1,7 @@
 /** @type {import("next").NextConfig} */
-const nextConfig = {
+module.exports = {
   poweredByHeader: false,
   experimental: {
     cpus: 1,
-    workerThreads: false,
   },
 };
-
-export default nextConfig;
-
-
-export default nextConfig;
