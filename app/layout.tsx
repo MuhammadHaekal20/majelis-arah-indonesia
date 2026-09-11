@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   description: "Menyatukan Gagasan. Menguatkan Arah. Menghadirkan Manfaat.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
