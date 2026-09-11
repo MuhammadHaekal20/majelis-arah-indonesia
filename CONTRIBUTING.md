@@ -50,6 +50,8 @@ Produksi: `prisma migrate deploy`, bukan `db push` / seed akun uji.
 Setiap PR menjalankan `.github/workflows/ci.yml` (install, Prisma generate, lint, typecheck).  
 Perbaikan yang merusak CI harus masuk di PR yang sama.
 
+Deploy produksi: lihat `docs/DEPLOYMENT.md`. Jangan upload Next.js ke `public_html` Hostinger PHP.
+
 ## Keamanan
 
 - Secret hanya di `.env` atau GitHub Secrets / dashboard hosting.
