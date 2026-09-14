@@ -14,7 +14,7 @@ Repo: `arah-indonesia-web`
 |---|---|
 | Framework | Next.js **16.3** App Router, React **19** |
 | Styling | Tailwind CSS **v4** (`app/globals.css` + `tailwind.config.ts`) |
-| ORM | Prisma **7** + PostgreSQL via `@prisma/adapter-pg` |
+| ORM | Prisma **7** + MySQL/MariaDB via `@prisma/adapter-mariadb` |
 | Auth | NextAuth **v4** (Credentials + bcrypt) |
 | Editor | `react-quill-new` (bukan `react-quill` lama) |
 | Email | nodemailer (opsional, via env SMTP) |
@@ -23,7 +23,7 @@ Repo: `arah-indonesia-web`
 ### Aturan stack yang sering salah
 
 1. **Next.js 16 ≠ Next lama.** Baca `AGENTS.md` dan docs di `node_modules/next/dist/docs/` sebelum mengubah routing / middleware / data fetching.
-2. **Prisma 7:** URL database ada di `prisma.config.ts`, bukan di `schema.prisma` datasource url klasik. Client di-generate ke `app/generated/prisma`. Adapter `pg` wajib (`lib/prisma.ts`).
+2. **Prisma 7:** URL database ada di `prisma.config.ts`, bukan di `schema.prisma` datasource url klasik. Client di-generate ke `app/generated/prisma`. Adapter `mariadb` wajib (`lib/prisma.ts`).
 3. Path alias `@prisma/client` → `./app/generated/prisma/client` (lihat `tsconfig.json`). Import `@prisma/client` tetap dipakai di app code.
 4. Setelah ubah schema: `npx prisma generate` (+ `db push` / migrate sesuai kebutuhan).
 
@@ -152,7 +152,7 @@ Saat menambah fitur data: ikuti pola Server Action yang ada (validasi session/ro
 Variabel penting:
 
 ```env
-DATABASE_URL="postgresql://postgres:password@localhost:5432/arah_indonesia?schema=public"
+DATABASE_URL="mysql://USER:PASSWORD@localhost:3306/arah_indonesia"
 NEXTAUTH_SECRET="..."
 NEXTAUTH_URL="http://localhost:3000"
 SMTP_HOST=...
@@ -166,12 +166,11 @@ Jangan commit `.env`.
 
 ## Local database
 
-- PostgreSQL biasanya via Docker: container `arah-postgres` di port `5432`
+- MySQL/MariaDB (Hostinger memakai MariaDB; Prisma `provider = "mysql"` kompatibel)
 - Jika error Prisma `ECONNREFUSED`: DB tidak jalan — bukan bug query
 - Perintah tipikal:
 
 ```bash
-docker start arah-postgres
 npx prisma db push
 npx prisma db seed
 npm run dev

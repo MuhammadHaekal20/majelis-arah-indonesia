@@ -1,6 +1,6 @@
 # Deployment — Majelis Arah Indonesia
 
-Stack: Next.js 16 (App Router) + Prisma 7 + PostgreSQL + NextAuth v4.
+Stack: Next.js 16 (App Router) + Prisma 7 + MySQL/MariaDB + NextAuth v4.
 
 Baca `docs/HOSTINGER_AUDIT.md` sebelum deploy ke Hostinger.
 
@@ -16,7 +16,7 @@ Baca `docs/HOSTINGER_AUDIT.md` sebelum deploy ke Hostinger.
 Set di panel hosting / Vercel. Jangan commit nilai nyata.
 
 ```env
-DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DB?schema=public&sslmode=require
+DATABASE_URL=mysql://USER:PASSWORD@HOST:3306/DB
 NEXTAUTH_SECRET=<openssl rand -base64 32>
 NEXTAUTH_URL=https://arahindonesia.org
 ADMIN_EMAIL=admin@arahindonesia.org
@@ -24,7 +24,7 @@ ADMIN_EMAIL=admin@arahindonesia.org
 
 SMTP opsional (`SMTP_*`). `NEXTAUTH_URL` harus URL publik HTTPS.
 
-Di Hostinger, isi variabel **tanpa** tanda kutip di nilai. Panel menyuntikkan `DATABASE_URL='postgres://…'` secara literal; Prisma lalu gagal dengan `Can't reach database server at base`. Benar: `DATABASE_URL=postgres://…`
+Di Hostinger, isi variabel **tanpa** tanda kutip di nilai. Panel menyuntikkan `DATABASE_URL='mysql://…'` secara literal dan koneksi gagal. Benar: `DATABASE_URL=mysql://…`
 
 Build command: `npm run build` (sudah menjalankan `prisma generate`).  
 Start command: `npm start` (bind `0.0.0.0`; `PORT` dari platform).  
@@ -37,7 +37,7 @@ Syarat: paket **Business atau Cloud** ([syarat resmi](https://www.hostinger.com/
 1. hPanel → **Add Website** → **Deploy Web App** → **Node.js**.
 2. Import GitHub: `MuhammadHaekal20/majelis-arah-indonesia`, branch `main`.
 3. Framework: Next.js. Node 22. Build `npm run build`. Start `npm start`.
-4. Isi environment variables di atas. Database: PostgreSQL eksternal (bukan MariaDB panel).
+4. Isi environment variables di atas. Database: **MariaDB/MySQL** dari hPanel (bukan PostgreSQL eksternal).
 5. Domain: `arahindonesia.org`.
 6. Setelah live: ganti password admin seed; jangan jalankan `db seed` di produksi.
 
