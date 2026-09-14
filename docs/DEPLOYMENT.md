@@ -20,6 +20,8 @@ DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DB?schema=public&sslmode=requi
 NEXTAUTH_SECRET=<openssl rand -base64 32>
 NEXTAUTH_URL=https://arahindonesia.org
 ADMIN_EMAIL=admin@arahindonesia.org
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
 ```
 
 SMTP opsional (`SMTP_*`). `NEXTAUTH_URL` harus URL publik HTTPS.
