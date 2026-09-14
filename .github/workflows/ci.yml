@@ -16,7 +16,7 @@ jobs:
     timeout-minutes: 15
     env:
       # Dummy URL: prisma generate membutuhkan datasource.url di Prisma 7
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/arah_indonesia?schema=public
+      DATABASE_URL: mysql://root:root@localhost:3306/arah_indonesia
       NEXTAUTH_SECRET: ci-placeholder-not-for-production
       NEXTAUTH_URL: http://localhost:3000
     steps:

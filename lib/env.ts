@@ -29,7 +29,7 @@ export function databaseUrl(): string {
 export function databaseUrlOrDummy(): string {
   const raw = process.env.DATABASE_URL;
   if (!raw?.trim()) {
-    return "postgresql://postgres:postgres@127.0.0.1:5432/arah_indonesia?schema=public";
+    return "mysql://root:root@127.0.0.1:3306/arah_indonesia";
   }
   return unwrapQuoted(raw);
 }
