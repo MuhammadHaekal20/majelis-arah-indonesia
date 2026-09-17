@@ -1,4 +1,4 @@
-import { PrismaMariaDb } from "@prisma/adapter-mariadb";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@/app/generated/prisma/client";
 import { databaseUrl, sanitizeRuntimeEnv } from "@/lib/env";
 
@@ -9,7 +9,10 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function createPrismaClient() {
-  const adapter = new PrismaMariaDb(databaseUrl());
+  const adapter = new PrismaPg({
+    connectionString: databaseUrl(),
+  });
+
   return new PrismaClient({ adapter });
 }
 

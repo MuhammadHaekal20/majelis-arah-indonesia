@@ -8,7 +8,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
 }
 
 enum Role {
@@ -42,17 +42,17 @@ model Presidium {
   nama       String
   gelar      String
   urutan     Int      @default(0)
-  foto_url   String   @db.VarChar(2048)
+  foto_url   String
   created_at DateTime @default(now())
 }
 
 model Publikasi {
   id         String   @id @default(cuid())
   slug       String   @unique
-  judul      String   @db.VarChar(255)
-  konten     String   @db.LongText
-  excerpt    String   @db.Text
-  cover_url  String   @db.VarChar(2048)
+  judul      String
+  konten     String   @db.Text
+  excerpt    String
+  cover_url  String
   author_id  String
   created_at DateTime @default(now())
 
@@ -74,8 +74,8 @@ model Diskusi {
 
 model GagasanThread {
   id              String         @id @default(cuid())
-  judul           String         @db.VarChar(255)
-  konten          String         @db.LongText
+  judul           String
+  konten          String         @db.Text
   status_moderasi StatusModerasi @default(PENDING)
   author_id       String
   created_at      DateTime       @default(now())

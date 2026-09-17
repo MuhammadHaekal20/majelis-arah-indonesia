@@ -70,11 +70,15 @@ export async function registerUser(formData: FormData): Promise<RegisterState> {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "";
-    if (message.includes("parsing connection string") || message.includes("ECONNREFUSED")) {
+    if (
+      message.includes("parsing connection string") ||
+      message.includes("ECONNREFUSED") ||
+      message.includes("Can't reach database")
+    ) {
       return {
         ok: false,
         message:
-          "Database tidak terhubung. DATABASE_URL harus mysql://USER:PASSWORD@HOST:3306/DB",
+          "Database tidak terhubung. Periksa DATABASE_URL PostgreSQL lalu coba lagi.",
       };
     }
     return {
