@@ -59,6 +59,10 @@ export const authOptions: NextAuthOptions = {
             return null;
           }
 
+          if (!user.emailVerified) {
+            return null;
+          }
+
           const passwordValid = await compare(password, user.password);
 
           if (!passwordValid) {
@@ -101,7 +105,13 @@ export const authOptions: NextAuthOptions = {
             email,
             password: await hash(unusablePassword, 10),
             role: Role.MEMBER,
+            emailVerified: new Date(),
           },
+        });
+      } else if (!existing.emailVerified) {
+        await prisma.user.update({
+          where: { id: existing.id },
+          data: { emailVerified: new Date() },
         });
       }
 

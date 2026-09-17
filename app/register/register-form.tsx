@@ -8,8 +8,10 @@ import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 
 export default function RegisterForm({
   googleEnabled,
+  googleCallbackUrl,
 }: {
   googleEnabled: boolean;
+  googleCallbackUrl: string;
 }) {
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
@@ -148,6 +150,7 @@ export default function RegisterForm({
         <GoogleSignInButton
           label="Daftar dengan Google"
           enabled={googleEnabled}
+          callbackHint={googleCallbackUrl}
         />
 
         <p className="mt-6 text-center text-sm text-slate-500">

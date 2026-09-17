@@ -6,18 +6,25 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { FormEvent, Suspense, useState } from "react";
 import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
+import {
+  isUnverifiedEmail,
+  resendVerificationEmail,
+} from "@/lib/actions/auth";
 
-function oauthErrorMessage(code: string | null): string {
+function oauthErrorMessage(
+  code: string | null,
+  googleCallbackUrl: string,
+): string {
   if (!code) {
     return "";
   }
 
   if (code === "OAuthSignin" || code === "Configuration") {
-    return "Login Google gagal. Isi GOOGLE_CLIENT_ID dan GOOGLE_CLIENT_SECRET di .env, lalu restart npm run dev.";
+    return "Login Google gagal. Periksa GOOGLE_CLIENT_ID dan GOOGLE_CLIENT_SECRET.";
   }
 
   if (code === "OAuthCallback" || code === "Callback") {
-    return "Callback Google ditolak. Tambahkan http://localhost:3000/api/auth/callback/google di Google Cloud Console.";
+    return `Callback Google ditolak (redirect_uri_mismatch). Di Google Cloud Console, tambahkan URI ini persis: ${googleCallbackUrl}`;
   }
 
   if (code === "AccessDenied") {
@@ -27,21 +34,41 @@ function oauthErrorMessage(code: string | null): string {
   return "Login Google gagal. Coba lagi.";
 }
 
-function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
+function LoginForm({
+  googleEnabled,
+  googleCallbackUrl,
+}: {
+  googleEnabled: boolean;
+  googleCallbackUrl: string;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(oauthErrorMessage(searchParams.get("error")));
+  const [error, setError] = useState(
+    oauthErrorMessage(searchParams.get("error"), googleCallbackUrl),
+  );
+  const [info, setInfo] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
   const registered = searchParams.get("registered") === "1";
+  const needsVerify = searchParams.get("verify") === "1";
+  const verified = searchParams.get("verified") === "1";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
+    setInfo("");
     setLoading(true);
 
     try {
+      if (await isUnverifiedEmail(email)) {
+        setError(
+          "Email belum diverifikasi. Cek kotak masuk (dan folder spam), lalu klik tautannya.",
+        );
+        return;
+      }
+
       const res = await signIn("credentials", {
         email,
         password,
@@ -59,6 +86,26 @@ function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
       setError("Terjadi kesalahan. Silakan coba lagi.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleResend() {
+    setError("");
+    setInfo("");
+    setResending(true);
+    try {
+      const formData = new FormData();
+      formData.set("email", email);
+      const result = await resendVerificationEmail(formData);
+      if (result.ok) {
+        setInfo(result.message);
+      } else {
+        setError(result.message);
+      }
+    } catch {
+      setError("Gagal mengirim ulang tautan verifikasi.");
+    } finally {
+      setResending(false);
     }
   }
 
@@ -97,6 +144,34 @@ function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
             role="status"
           >
             Registrasi berhasil. Silakan masuk.
+          </p>
+        ) : null}
+
+        {needsVerify ? (
+          <p
+            className="mt-6 rounded-lg border border-mai-green/30 bg-mai-green/10 px-3 py-2.5 text-center text-sm text-[#3f6f1f]"
+            role="status"
+          >
+            Kami telah mengirim tautan verifikasi ke email Anda. Klik tautan
+            itu sebelum masuk.
+          </p>
+        ) : null}
+
+        {verified ? (
+          <p
+            className="mt-6 rounded-lg border border-mai-green/30 bg-mai-green/10 px-3 py-2.5 text-center text-sm text-[#3f6f1f]"
+            role="status"
+          >
+            Email berhasil diverifikasi. Silakan masuk.
+          </p>
+        ) : null}
+
+        {info ? (
+          <p
+            className="mt-6 rounded-lg border border-mai-green/30 bg-mai-green/10 px-3 py-2.5 text-center text-sm text-[#3f6f1f]"
+            role="status"
+          >
+            {info}
           </p>
         ) : null}
 
@@ -142,13 +217,25 @@ function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
           </button>
         </form>
 
+        <button
+          type="button"
+          onClick={() => void handleResend()}
+          disabled={resending || !email}
+          className="mt-3 w-full text-center text-xs font-medium text-mai-blue underline-offset-2 hover:underline disabled:opacity-50"
+        >
+          {resending ? "Mengirim ulang..." : "Kirim ulang tautan verifikasi"}
+        </button>
+
         <div className="mt-6 flex items-center gap-3 text-xs tracking-wide text-slate-400 uppercase">
           <span className="h-px flex-1 bg-slate-200" />
           atau
           <span className="h-px flex-1 bg-slate-200" />
         </div>
 
-        <GoogleSignInButton enabled={googleEnabled} />
+        <GoogleSignInButton
+          enabled={googleEnabled}
+          callbackHint={googleCallbackUrl}
+        />
 
         <p className="mt-6 text-center text-sm text-slate-500">
           Belum punya akun?{" "}
@@ -166,8 +253,10 @@ function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
 
 export default function LoginPage({
   googleEnabled,
+  googleCallbackUrl,
 }: {
   googleEnabled: boolean;
+  googleCallbackUrl: string;
 }) {
   return (
     <Suspense
@@ -177,7 +266,10 @@ export default function LoginPage({
         </div>
       }
     >
-      <LoginForm googleEnabled={googleEnabled} />
+      <LoginForm
+        googleEnabled={googleEnabled}
+        googleCallbackUrl={googleCallbackUrl}
+      />
     </Suspense>
   );
 }

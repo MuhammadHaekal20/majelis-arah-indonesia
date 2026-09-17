@@ -114,12 +114,14 @@ async function seedUsers() {
       name: "Administrator MAI",
       password: adminPassword,
       role: Role.ADMIN,
+      emailVerified: new Date(),
     },
     create: {
       name: "Administrator MAI",
       email: "admin@mai.id",
       password: adminPassword,
       role: Role.ADMIN,
+      emailVerified: new Date(),
     },
   });
 
@@ -129,12 +131,14 @@ async function seedUsers() {
       name: "Anggota Aktif",
       password: memberPassword,
       role: Role.MEMBER,
+      emailVerified: new Date(),
     },
     create: {
       name: "Anggota Aktif",
       email: "anggota@test.com",
       password: memberPassword,
       role: Role.MEMBER,
+      emailVerified: new Date(),
     },
   });
 
@@ -144,12 +148,14 @@ async function seedUsers() {
       name: "Anggota Dua",
       password: memberPassword,
       role: Role.MEMBER,
+      emailVerified: new Date(),
     },
     create: {
       name: "Anggota Dua",
       email: "anggota2@test.com",
       password: memberPassword,
       role: Role.MEMBER,
+      emailVerified: new Date(),
     },
   });
 
@@ -160,12 +166,14 @@ async function seedUsers() {
       name: "Budi Santoso",
       password: guestPassword,
       role: Role.GUEST,
+      emailVerified: new Date(),
     },
     create: {
       name: "Budi Santoso",
       email: "budi.pengunjung@test.com",
       password: guestPassword,
       role: Role.GUEST,
+      emailVerified: new Date(),
     },
   });
 
@@ -175,12 +183,14 @@ async function seedUsers() {
       name: "Aisyah",
       password: guestPassword,
       role: Role.GUEST,
+      emailVerified: new Date(),
     },
     create: {
       name: "Aisyah",
       email: "aisyah.pengunjung@test.com",
       password: guestPassword,
       role: Role.GUEST,
+      emailVerified: new Date(),
     },
   });
 

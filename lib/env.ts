@@ -5,6 +5,12 @@ const RUNTIME_KEYS = [
   "ADMIN_EMAIL",
   "GOOGLE_CLIENT_ID",
   "GOOGLE_CLIENT_SECRET",
+  "SMTP_HOST",
+  "SMTP_PORT",
+  "SMTP_SECURE",
+  "SMTP_USER",
+  "SMTP_PASS",
+  "SMTP_FROM",
 ] as const;
 
 function unwrapQuoted(value: string): string {
@@ -43,12 +49,35 @@ export function isGoogleAuthConfigured(): boolean {
   );
 }
 
+export function isSmtpConfigured(): boolean {
+  return Boolean(
+    process.env.SMTP_HOST?.trim() &&
+      process.env.SMTP_USER?.trim() &&
+      process.env.SMTP_PASS?.trim(),
+  );
+}
+
+export function publicAppUrl(): string {
+  const raw = process.env.NEXTAUTH_URL?.trim();
+  const fallback = "http://localhost:3000";
+  const url = unwrapQuoted(raw && raw.length > 0 ? raw : fallback);
+  return url.replace(/\/+$/, "");
+}
+
+export function googleCallbackUrl(): string {
+  return `${publicAppUrl()}/api/auth/callback/google`;
+}
+
 /** Hostinger injects KEY='value' literally; pg then resolves host to "base". */
 export function sanitizeRuntimeEnv(): void {
   for (const key of RUNTIME_KEYS) {
     const current = process.env[key];
     if (typeof current === "string" && current.length > 0) {
-      process.env[key] = unwrapQuoted(current);
+      let value = unwrapQuoted(current);
+      if (key === "NEXTAUTH_URL") {
+        value = value.replace(/\/+$/, "");
+      }
+      process.env[key] = value;
     }
   }
 }
