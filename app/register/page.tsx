@@ -2,120 +2,150 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useActionState, useEffect } from "react";
-import {
-  registerUser,
-  type RegisterState,
-} from "@/app/register/actions";
-
-const initialState: RegisterState = { ok: false, message: "" };
+import { useState } from "react";
+import { registerUser } from "@/lib/actions/auth";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 
 export default function RegisterPage() {
-  const router = useRouter();
-  const [state, formAction, pending] = useActionState(
-    registerUser,
-    initialState,
-  );
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
 
-  useEffect(() => {
-    if (state.ok) {
-      const timer = setTimeout(() => router.push("/login"), 800);
-      return () => clearTimeout(timer);
+  async function handleSubmit(formData: FormData) {
+    setError("");
+    const password = String(formData.get("password") ?? "");
+    const confirmPassword = String(formData.get("confirmPassword") ?? "");
+
+    if (password !== confirmPassword) {
+      setError("Konfirmasi kata sandi tidak cocok.");
+      return;
     }
-  }, [state.ok, router]);
+
+    setPending(true);
+    const result = await registerUser(formData);
+    setPending(false);
+
+    if (result && !result.ok) {
+      setError(result.message);
+    }
+  }
 
   return (
     <div className="relative flex min-h-[calc(100vh-8rem)] items-center justify-center overflow-hidden px-4 py-16">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(249,107,42,0.14),_transparent_50%),linear-gradient(200deg,#f4f8fb_0%,#e3f2f9_50%,#eef6fb_100%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(65,182,226,0.18),transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(117,177,61,0.12),transparent_50%),linear-gradient(160deg,#f8fafc_0%,#eef6fb_50%,#f1f5f9_100%)]"
       />
-      <div className="mai-rise relative w-full max-w-md border border-primary/20 bg-white/95 p-8 shadow-[0_24px_60px_rgba(13,126,176,0.14)] backdrop-blur-sm">
+
+      <div className="relative w-full max-w-md rounded-2xl border border-slate-200/80 bg-white/95 p-8 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm">
         <div className="mb-6 flex justify-center">
           <Image
             src="/logo.png"
             alt="Majelis Arah Indonesia"
-            width={160}
-            height={116}
+            width={180}
+            height={130}
             priority
             className="h-24 w-auto object-contain"
           />
         </div>
 
-        <p className="text-center text-xs font-semibold tracking-[0.2em] text-primary-dark uppercase">
-          Bergabung
+        <p className="text-center text-xs font-semibold tracking-[0.22em] text-mai-blue uppercase">
+          Portal MAI
         </p>
-        <h1 className="mt-2 text-center font-[family-name:var(--font-display)] text-4xl text-mai-navy">
+        <h1 className="mt-2 text-center font-[family-name:var(--font-display)] text-4xl text-mai-dark">
           Daftar akun
         </h1>
-        <p className="mt-2 text-center text-sm text-[var(--mai-muted)]">
-          Buat akun baru untuk mengikuti publikasi dan menyampaikan gagasan.
+        <p className="mt-2 text-center text-sm text-slate-500">
+          Buat akun untuk mengikuti berita dan menyampaikan gagasan.
         </p>
 
-        <form action={formAction} className="mt-8 space-y-4">
+        <form action={handleSubmit} className="mt-8 space-y-4">
           <label className="block space-y-1.5">
-            <span className="text-sm font-medium text-mai-navy">Nama</span>
+            <span className="text-sm font-medium text-mai-dark">
+              Nama Lengkap
+            </span>
             <input
               name="name"
               type="text"
               required
+              maxLength={120}
               autoComplete="name"
-              className="w-full border border-primary/25 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-primary"
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-mai-blue"
               placeholder="Nama lengkap"
             />
           </label>
 
           <label className="block space-y-1.5">
-            <span className="text-sm font-medium text-mai-navy">Email</span>
+            <span className="text-sm font-medium text-mai-dark">Email</span>
             <input
               name="email"
               type="email"
               required
               autoComplete="email"
-              className="w-full border border-primary/25 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-primary"
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-mai-blue"
               placeholder="nama@email.com"
             />
           </label>
 
           <label className="block space-y-1.5">
-            <span className="text-sm font-medium text-mai-navy">Kata sandi</span>
+            <span className="text-sm font-medium text-mai-dark">Password</span>
             <input
               name="password"
               type="password"
               required
-              minLength={6}
+              minLength={8}
+              maxLength={72}
               autoComplete="new-password"
-              className="w-full border border-primary/25 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-primary"
-              placeholder="Minimal 6 karakter"
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-mai-blue"
+              placeholder="Minimal 8 karakter"
             />
           </label>
 
-          {state.message ? (
-            <p
-              className={`text-sm ${state.ok ? "text-secondary-dark" : "text-accent-dark"}`}
-              role="status"
-            >
-              {state.message}
+          <label className="block space-y-1.5">
+            <span className="text-sm font-medium text-mai-dark">
+              Konfirmasi Password
+            </span>
+            <input
+              name="confirmPassword"
+              type="password"
+              required
+              minLength={8}
+              maxLength={72}
+              autoComplete="new-password"
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-mai-blue"
+              placeholder="Ulangi kata sandi"
+            />
+          </label>
+
+          {error ? (
+            <p className="text-sm text-mai-red" role="alert">
+              {error}
             </p>
           ) : null}
 
           <button
             type="submit"
             disabled={pending}
-            className="w-full bg-primary px-4 py-2.5 text-sm font-medium text-white transition hover:bg-primary-dark disabled:opacity-60"
+            className="w-full rounded-lg bg-mai-green px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#5A8F2E] disabled:opacity-60"
           >
-            {pending ? "Menyimpan…" : "Daftar"}
+            {pending ? "Menyimpan..." : "Daftar"}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-[var(--mai-muted)]">
+        <div className="mt-6 flex items-center gap-3 text-xs tracking-wide text-slate-400 uppercase">
+          <span className="h-px flex-1 bg-slate-200" />
+          atau
+          <span className="h-px flex-1 bg-slate-200" />
+        </div>
+
+        <GoogleSignInButton label="Daftar dengan Google" />
+
+        <p className="mt-6 text-center text-sm text-slate-500">
           Sudah punya akun?{" "}
           <Link
             href="/login"
-            className="font-medium text-primary-dark underline-offset-2 hover:underline"
+            className="font-medium text-mai-blue underline-offset-2 hover:underline"
           >
-            Masuk
+            Login di sini
           </Link>
         </p>
       </div>

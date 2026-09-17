@@ -3,6 +3,8 @@ const RUNTIME_KEYS = [
   "NEXTAUTH_URL",
   "NEXTAUTH_SECRET",
   "ADMIN_EMAIL",
+  "GOOGLE_CLIENT_ID",
+  "GOOGLE_CLIENT_SECRET",
 ] as const;
 
 function unwrapQuoted(value: string): string {

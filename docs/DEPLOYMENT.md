@@ -20,9 +20,13 @@ DATABASE_URL=mysql://USER:PASSWORD@HOST:3306/DB
 NEXTAUTH_SECRET=<openssl rand -base64 32>
 NEXTAUTH_URL=https://arahindonesia.org
 ADMIN_EMAIL=admin@arahindonesia.org
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
 ```
 
 SMTP opsional (`SMTP_*`). `NEXTAUTH_URL` harus URL publik HTTPS.
+
+Google OAuth: Authorized redirect URI `{NEXTAUTH_URL}/api/auth/callback/google`.
 
 Di Hostinger, isi variabel **tanpa** tanda kutip di nilai. Panel menyuntikkan `DATABASE_URL='mysql://…'` secara literal dan koneksi gagal. Benar: `DATABASE_URL=mysql://…`
 

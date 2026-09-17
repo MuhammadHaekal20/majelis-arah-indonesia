@@ -2,16 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { FormEvent, useState } from "react";
+import { FormEvent, Suspense, useState } from "react";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const registered = searchParams.get("registered") === "1";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -30,7 +33,7 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/admin");
+      router.push("/");
       router.refresh();
     } catch {
       setError("Terjadi kesalahan. Silakan coba lagi.");
@@ -62,11 +65,20 @@ export default function LoginPage() {
           Portal MAI
         </p>
         <h1 className="mt-2 text-center font-[family-name:var(--font-display)] text-4xl text-mai-dark">
-          Ruang Kendali MAI
+          Masuk
         </h1>
         <p className="mt-2 text-center text-sm text-slate-500">
           Masuk untuk mengakses CMS dan ruang anggota.
         </p>
+
+        {registered ? (
+          <p
+            className="mt-6 rounded-lg border border-mai-green/30 bg-mai-green/10 px-3 py-2.5 text-center text-sm text-[#3f6f1f]"
+            role="status"
+          >
+            Registrasi berhasil. Silakan masuk.
+          </p>
+        ) : null}
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
           <label className="block space-y-1.5">
@@ -110,16 +122,38 @@ export default function LoginPage() {
           </button>
         </form>
 
+        <div className="mt-6 flex items-center gap-3 text-xs tracking-wide text-slate-400 uppercase">
+          <span className="h-px flex-1 bg-slate-200" />
+          atau
+          <span className="h-px flex-1 bg-slate-200" />
+        </div>
+
+        <GoogleSignInButton />
+
         <p className="mt-6 text-center text-sm text-slate-500">
           Belum punya akun?{" "}
           <Link
             href="/register"
             className="font-medium text-mai-blue underline-offset-2 hover:underline"
           >
-            Daftar
+            Daftar di sini
           </Link>
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center text-sm text-slate-500">
+          Memuat...
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }
