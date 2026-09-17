@@ -4,6 +4,6 @@ module.exports = {
   experimental: {
     cpus: 1,
   },
-  serverExternalPackages: ["mariadb", "bcrypt"],
+  serverExternalPackages: ["pg", "bcrypt"],
 };
 
