@@ -48,25 +48,40 @@ export async function registerUser(formData: FormData): Promise<RegisterState> {
     return { ok: false, message: "Konfirmasi kata sandi tidak cocok." };
   }
 
-  const existing = await prisma.user.findUnique({
-    where: { email },
-    select: { id: true },
-  });
+  try {
+    const existing = await prisma.user.findUnique({
+      where: { email },
+      select: { id: true },
+    });
 
-  if (existing) {
-    return { ok: false, message: "Email sudah terdaftar." };
+    if (existing) {
+      return { ok: false, message: "Email sudah terdaftar." };
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        role: Role.MEMBER,
+      },
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    if (message.includes("parsing connection string") || message.includes("ECONNREFUSED")) {
+      return {
+        ok: false,
+        message:
+          "Database tidak terhubung. DATABASE_URL harus mysql://USER:PASSWORD@HOST:3306/DB",
+      };
+    }
+    return {
+      ok: false,
+      message: "Pendaftaran gagal. Coba lagi atau periksa koneksi database.",
+    };
   }
-
-  const hashedPassword = await bcrypt.hash(password, 12);
-
-  await prisma.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-      role: Role.MEMBER,
-    },
-  });
 
   redirect("/login?registered=1");
 }

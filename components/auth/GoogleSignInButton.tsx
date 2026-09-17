@@ -27,13 +27,32 @@ function GoogleIcon() {
 
 export function GoogleSignInButton({
   label = "Login dengan Google",
+  enabled = false,
 }: {
   label?: string;
+  enabled?: boolean;
 }) {
+  if (!enabled) {
+    return (
+      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-center text-sm text-amber-950">
+        Login Google belum dikonfigurasi. Isi{" "}
+        <code className="font-mono text-xs">GOOGLE_CLIENT_ID</code> dan{" "}
+        <code className="font-mono text-xs">GOOGLE_CLIENT_SECRET</code> di{" "}
+        <code className="font-mono text-xs">.env</code>, lalu restart server.
+        Redirect URI:{" "}
+        <code className="font-mono text-[11px]">
+          http://localhost:3000/api/auth/callback/google
+        </code>
+      </p>
+    );
+  }
+
   return (
     <button
       type="button"
-      onClick={() => signIn("google")}
+      onClick={() => {
+        void signIn("google");
+      }}
       className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-mai-dark transition hover:bg-slate-50"
     >
       <GoogleIcon />

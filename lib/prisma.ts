@@ -10,7 +10,6 @@ const globalForPrisma = globalThis as unknown as {
 
 function createPrismaClient() {
   const adapter = new PrismaMariaDb(databaseUrl());
-
   return new PrismaClient({ adapter });
 }
 

@@ -25,7 +25,14 @@ export function databaseUrl(): string {
   if (!raw?.trim()) {
     throw new Error("DATABASE_URL is not set");
   }
-  return unwrapQuoted(raw);
+  const url = unwrapQuoted(raw);
+  const scheme = url.split(":")[0]?.toLowerCase() ?? "";
+  if (scheme === "postgres" || scheme === "postgresql") {
+    throw new Error(
+      "DATABASE_URL masih PostgreSQL. Ganti ke mysql://USER:PASSWORD@HOST:3306/DB",
+    );
+  }
+  return url;
 }
 
 export function databaseUrlOrDummy(): string {
@@ -36,7 +43,14 @@ export function databaseUrlOrDummy(): string {
   return unwrapQuoted(raw);
 }
 
-/** Hostinger injects KEY='value' literally; pg then resolves host to "base". */
+export function isGoogleAuthConfigured(): boolean {
+  return Boolean(
+    process.env.GOOGLE_CLIENT_ID?.trim() &&
+      process.env.GOOGLE_CLIENT_SECRET?.trim(),
+  );
+}
+
+/** Hostinger injects KEY='value' literally; strip wrapping quotes. */
 export function sanitizeRuntimeEnv(): void {
   for (const key of RUNTIME_KEYS) {
     const current = process.env[key];

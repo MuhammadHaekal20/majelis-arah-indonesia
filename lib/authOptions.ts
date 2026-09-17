@@ -4,7 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { compare, hash } from "bcrypt";
 import { Role } from "@/app/generated/prisma/client";
-import { sanitizeRuntimeEnv } from "@/lib/env";
+import { isGoogleAuthConfigured, sanitizeRuntimeEnv } from "@/lib/env";
 import { prisma } from "@/lib/prisma";
 
 sanitizeRuntimeEnv();
@@ -18,6 +18,8 @@ function googleEmailVerified(profile?: Profile): boolean {
   return verified !== false;
 }
 
+const googleConfigured = isGoogleAuthConfigured();
+
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
@@ -26,10 +28,14 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login",
   },
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
-    }),
+    ...(googleConfigured
+      ? [
+          GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+          }),
+        ]
+      : []),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -44,26 +50,31 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const user = await prisma.user.findUnique({
-          where: { email },
-        });
+        try {
+          const user = await prisma.user.findUnique({
+            where: { email },
+          });
 
-        if (!user) {
+          if (!user) {
+            return null;
+          }
+
+          const passwordValid = await compare(password, user.password);
+
+          if (!passwordValid) {
+            return null;
+          }
+
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+          };
+        } catch (error) {
+          console.error("[auth] credentials lookup failed", error);
           return null;
         }
-
-        const passwordValid = await compare(password, user.password);
-
-        if (!passwordValid) {
-          return null;
-        }
-
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-        };
       },
     }),
   ],
