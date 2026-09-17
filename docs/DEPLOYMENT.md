@@ -22,13 +22,35 @@ NEXTAUTH_URL=https://arahindonesia.org
 ADMIN_EMAIL=admin@arahindonesia.org
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
+SMTP_HOST=smtp.hostinger.com
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=noreply@arahindonesia.org
+SMTP_PASS=
+SMTP_FROM=MAI Portal <noreply@arahindonesia.org>
 ```
 
 SMTP opsional (`SMTP_*`). `NEXTAUTH_URL` harus URL publik HTTPS.
 
-Google OAuth: Authorized redirect URI `{NEXTAUTH_URL}/api/auth/callback/google`.
+Google OAuth: di Google Cloud Console (tipe **Web application**) isi **Authorized JavaScript origins** dan **Authorized redirect URIs** persis:
+
+```
+https://arahindonesia.org
+https://www.arahindonesia.org
+http://localhost:3000
+```
+
+```
+https://arahindonesia.org/api/auth/callback/google
+https://www.arahindonesia.org/api/auth/callback/google
+http://localhost:3000/api/auth/callback/google
+```
+
+Error `redirect_uri_mismatch` berarti URI di atas belum ditambahkan pada Client ID yang sama dengan `GOOGLE_CLIENT_ID`.
 
 Di Hostinger, isi variabel **tanpa** tanda kutip di nilai. Panel menyuntikkan `DATABASE_URL='postgresql://…'` secara literal dan koneksi gagal. Benar: `DATABASE_URL=postgresql://…`
+
+Verifikasi email registrasi memakai SMTP. Buat mailbox di hPanel (contoh `noreply@arahindonesia.org`) lalu isi `SMTP_*`. Tanpa itu, daftar akun manual tidak bisa mengirim tautan.
 
 Build command: `npm run build` (sudah menjalankan `prisma generate`).  
 Start command: `npm start` (bind `0.0.0.0`; `PORT` dari platform).  

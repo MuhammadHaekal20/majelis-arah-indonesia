@@ -24,17 +24,29 @@ enum StatusModerasi {
 }
 
 model User {
-  id         String   @id @default(cuid())
-  name       String
-  email      String   @unique
-  password   String
-  role       Role     @default(GUEST)
-  created_at DateTime @default(now())
+  id             String    @id @default(cuid())
+  name           String
+  email          String    @unique
+  password       String
+  role           Role      @default(GUEST)
+  emailVerified  DateTime?
+  created_at     DateTime  @default(now())
 
   publikasi       Publikasi[]
   diskusi         Diskusi[]
   gagasan         GagasanThread[]
   balasanGagasan  BalasanGagasan[]
+  emailTokens     EmailVerificationToken[]
+}
+
+model EmailVerificationToken {
+  id         String   @id @default(cuid())
+  tokenHash  String   @unique
+  expires_at DateTime
+  user_id    String
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model Presidium {

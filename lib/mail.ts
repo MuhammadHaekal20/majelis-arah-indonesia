@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { isSmtpConfigured } from "@/lib/env";
 
 const smtpPort = Number(process.env.SMTP_PORT ?? 587);
 
@@ -23,7 +24,7 @@ export type NotificationType = "komentar" | "gagasan";
 export type ModerationStatus = "APPROVED" | "REJECTED";
 
 export async function sendMail({ to, subject, html, text }: SendMailInput) {
-  if (!process.env.SMTP_HOST || !process.env.SMTP_USER) {
+  if (!isSmtpConfigured()) {
     console.warn("[mail] SMTP belum dikonfigurasi. Email dilewati:", subject);
     return null;
   }
@@ -116,5 +117,33 @@ export async function sendUserNotification(
     });
   } catch (error) {
     console.error("[mail] sendUserNotification gagal:", error);
+  }
+}
+
+export async function sendVerificationEmail(email: string, verifyUrl: string) {
+  const subject = "[MAI] Verifikasi email akun Anda";
+  const html = `
+    <div style="font-family: sans-serif; line-height: 1.6; color: #0f172a;">
+      <h2 style="margin: 0 0 12px;">Verifikasi email</h2>
+      <p>Terima kasih telah mendaftar di portal Majelis Arah Indonesia.</p>
+      <p>Klik tautan berikut untuk mengaktifkan akun (berlaku 24 jam):</p>
+      <p>
+        <a href="${verifyUrl}" style="display:inline-block;background:#75B13D;color:#fff;text-decoration:none;padding:10px 16px;border-radius:8px;">
+          Verifikasi email
+        </a>
+      </p>
+      <p style="font-size: 12px; color: #64748b;">Jika tombol tidak berfungsi, salin tautan ini:<br>${verifyUrl}</p>
+    </div>
+  `;
+
+  const sent = await sendMail({
+    to: email,
+    subject,
+    html,
+    text: `Verifikasi email MAI: ${verifyUrl}`,
+  });
+
+  if (!sent) {
+    throw new Error("SMTP_NOT_CONFIGURED");
   }
 }

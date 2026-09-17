@@ -28,9 +28,11 @@ function GoogleIcon() {
 export function GoogleSignInButton({
   label = "Login dengan Google",
   enabled = false,
+  callbackHint,
 }: {
   label?: string;
   enabled?: boolean;
+  callbackHint?: string;
 }) {
   if (!enabled) {
     return (
@@ -41,7 +43,7 @@ export function GoogleSignInButton({
         <code className="font-mono text-xs">.env</code>, lalu restart server.
         Redirect URI:{" "}
         <code className="font-mono text-[11px]">
-          http://localhost:3000/api/auth/callback/google
+          {callbackHint ?? "http://localhost:3000/api/auth/callback/google"}
         </code>
       </p>
     );
@@ -51,7 +53,7 @@ export function GoogleSignInButton({
     <button
       type="button"
       onClick={() => {
-        void signIn("google");
+        void signIn("google", { callbackUrl: "/" });
       }}
       className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-mai-dark transition hover:bg-slate-50"
     >
