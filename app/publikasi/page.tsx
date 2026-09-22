@@ -11,10 +11,15 @@ function formatDate(date: Date) {
 }
 
 export default async function PublikasiPage() {
-  const items = await prisma.publikasi.findMany({
-    orderBy: { created_at: "desc" },
-    include: { author: { select: { name: true } } },
-  });
+  const items = await prisma.publikasi
+    .findMany({
+      orderBy: { created_at: "desc" },
+      include: { author: { select: { name: true } } },
+    })
+    .catch((error) => {
+      console.error("[PublikasiPage] Gagal mengambil data:", error);
+      return [];
+    });
 
   return (
     <div className="bg-slate-50">

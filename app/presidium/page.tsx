@@ -12,9 +12,14 @@ function getInitials(nama: string) {
 }
 
 export default async function PresidiumPage() {
-  const members = await prisma.presidium.findMany({
-    orderBy: { urutan: "asc" },
-  });
+  const members = await prisma.presidium
+    .findMany({
+      orderBy: { urutan: "asc" },
+    })
+    .catch((error) => {
+      console.error("[PresidiumPage] Gagal mengambil data:", error);
+      return [];
+    });
 
   return (
     <div className="bg-white">

@@ -3,7 +3,10 @@ import { KontakForm } from "@/components/kontak/KontakForm";
 import { prisma } from "@/lib/prisma";
 
 async function getSettings() {
-  const rows = await prisma.pengaturanWeb.findMany();
+  const rows = await prisma.pengaturanWeb.findMany().catch((error) => {
+    console.error("[KontakPage] Gagal mengambil pengaturan:", error);
+    return [];
+  });
   return Object.fromEntries(rows.map((row) => [row.key, row.value]));
 }
 
