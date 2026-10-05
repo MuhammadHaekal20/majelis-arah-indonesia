@@ -21,16 +21,21 @@ function formatDate(date: Date) {
 export default async function GagasanDetailPage({ params }: PageProps) {
   const { id } = await params;
 
-  const gagasan = await prisma.gagasanThread.findUnique({
-    where: { id },
-    include: {
-      author: { select: { name: true } },
-      balasan: {
-        orderBy: { created_at: "asc" },
-        include: { user: { select: { name: true } } },
+  const gagasan = await prisma.gagasanThread
+    .findUnique({
+      where: { id },
+      include: {
+        author: { select: { name: true } },
+        balasan: {
+          orderBy: { created_at: "asc" },
+          include: { user: { select: { name: true } } },
+        },
       },
-    },
-  });
+    })
+    .catch((error) => {
+      console.error("[GagasanDetailPage] Gagal mengambil data:", error);
+      return null;
+    });
 
   if (!gagasan || gagasan.status_moderasi !== StatusModerasi.APPROVED) {
     notFound();

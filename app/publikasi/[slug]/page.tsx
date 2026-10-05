@@ -22,17 +22,22 @@ function formatDate(date: Date) {
 export default async function PublikasiDetailPage({ params }: PageProps) {
   const { slug } = await params;
 
-  const item = await prisma.publikasi.findUnique({
-    where: { slug },
-    include: {
-      author: { select: { name: true } },
-      diskusi: {
-        where: { status_moderasi: StatusModerasi.APPROVED },
-        orderBy: { created_at: "desc" },
-        include: { user: { select: { name: true } } },
+  const item = await prisma.publikasi
+    .findUnique({
+      where: { slug },
+      include: {
+        author: { select: { name: true } },
+        diskusi: {
+          where: { status_moderasi: StatusModerasi.APPROVED },
+          orderBy: { created_at: "desc" },
+          include: { user: { select: { name: true } } },
+        },
       },
-    },
-  });
+    })
+    .catch((error) => {
+      console.error("[PublikasiDetailPage] Gagal mengambil data:", error);
+      return null;
+    });
 
   if (!item) {
     notFound();
