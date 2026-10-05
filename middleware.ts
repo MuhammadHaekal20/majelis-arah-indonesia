@@ -4,6 +4,12 @@ import { publicAppUrl, sanitizeRuntimeEnv } from "@/lib/env";
 
 sanitizeRuntimeEnv();
 
+function incomingHostname(req: NextRequest): string {
+  const raw =
+    req.headers.get("x-forwarded-host") || req.headers.get("host") || "";
+  return raw.split(",")[0].trim().split(":")[0].toLowerCase();
+}
+
 function canonicalHostRedirect(req: NextRequest): NextResponse | null {
   let canonical: URL;
   try {
@@ -19,14 +25,28 @@ function canonicalHostRedirect(req: NextRequest): NextResponse | null {
     return null;
   }
 
-  if (req.nextUrl.hostname === canonical.hostname) {
+  const incoming = incomingHostname(req);
+  if (!incoming || incoming === canonical.hostname) {
     return null;
   }
 
-  const url = req.nextUrl.clone();
-  url.protocol = canonical.protocol;
-  url.host = canonical.host;
-  return NextResponse.redirect(url, 308);
+  if (
+    incoming === "0.0.0.0" ||
+    incoming === "localhost" ||
+    incoming === "127.0.0.1"
+  ) {
+    return null;
+  }
+
+  if (incoming !== `www.${canonical.hostname}`) {
+    return null;
+  }
+
+  const dest = new URL(
+    `${req.nextUrl.pathname}${req.nextUrl.search}`,
+    canonical.origin,
+  );
+  return NextResponse.redirect(dest, 308);
 }
 
 export async function middleware(req: NextRequest) {
