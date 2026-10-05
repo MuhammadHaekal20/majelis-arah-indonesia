@@ -32,8 +32,8 @@ export default async function GagasanDetailPage({ params }: PageProps) {
         },
       },
     })
-    .catch((error) => {
-      console.error("[GagasanDetailPage] Gagal mengambil data:", error);
+    .catch(() => {
+      console.warn("[GagasanDetailPage] Database tidak tersedia.");
       return null;
     });
 

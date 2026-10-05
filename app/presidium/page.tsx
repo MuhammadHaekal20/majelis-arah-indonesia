@@ -16,8 +16,8 @@ export default async function PresidiumPage() {
     .findMany({
       orderBy: { urutan: "asc" },
     })
-    .catch((error) => {
-      console.error("[PresidiumPage] Gagal mengambil data:", error);
+    .catch(() => {
+      console.warn("[PresidiumPage] Database tidak tersedia.");
       return [];
     });
 

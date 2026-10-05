@@ -31,8 +31,8 @@ export default async function RuangGagasanPage() {
         _count: { select: { balasan: true } },
       },
     })
-    .catch((error) => {
-      console.error("[RuangGagasanPage] Gagal mengambil data:", error);
+    .catch(() => {
+      console.warn("[RuangGagasanPage] Database tidak tersedia.");
       return [];
     });
 

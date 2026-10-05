@@ -12,24 +12,38 @@ function formatDate(date: Date) {
   }).format(date);
 }
 
-export default async function HomePage() {
-  const empty = [[], []] as const;
-  const [berita, gagasan] = await Promise.all([
-    prisma.publikasi.findMany({
+async function loadHomeBerita() {
+  try {
+    return await prisma.publikasi.findMany({
       take: 4,
       orderBy: { created_at: "desc" },
       include: { author: { select: { name: true } } },
-    }),
-    prisma.gagasanThread.findMany({
+    });
+  } catch {
+    console.warn("[HomePage] Database tidak tersedia, berita dikosongkan.");
+    return [];
+  }
+}
+
+async function loadHomeGagasan() {
+  try {
+    return await prisma.gagasanThread.findMany({
       where: { status_moderasi: StatusModerasi.APPROVED },
       take: 4,
       orderBy: { created_at: "desc" },
       include: { author: { select: { name: true } } },
-    }),
-  ]).catch((error) => {
-    console.error("[HomePage] Gagal mengambil data dari database:", error);
-    return empty;
-  });
+    });
+  } catch {
+    console.warn("[HomePage] Database tidak tersedia, gagasan dikosongkan.");
+    return [];
+  }
+}
+
+export default async function HomePage() {
+  const [berita, gagasan] = await Promise.all([
+    loadHomeBerita(),
+    loadHomeGagasan(),
+  ]);
 
   return (
     <div className="bg-white">

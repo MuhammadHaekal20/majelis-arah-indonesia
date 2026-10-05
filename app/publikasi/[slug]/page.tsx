@@ -34,8 +34,8 @@ export default async function PublikasiDetailPage({ params }: PageProps) {
         },
       },
     })
-    .catch((error) => {
-      console.error("[PublikasiDetailPage] Gagal mengambil data:", error);
+    .catch(() => {
+      console.warn("[PublikasiDetailPage] Database tidak tersedia.");
       return null;
     });
 

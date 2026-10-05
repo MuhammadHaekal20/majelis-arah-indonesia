@@ -16,8 +16,8 @@ export default async function PublikasiPage() {
       orderBy: { created_at: "desc" },
       include: { author: { select: { name: true } } },
     })
-    .catch((error) => {
-      console.error("[PublikasiPage] Gagal mengambil data:", error);
+    .catch(() => {
+      console.warn("[PublikasiPage] Database tidak tersedia.");
       return [];
     });
 
