@@ -33,8 +33,8 @@
   --color-accent-dark: #d9531a;
   --color-accent-light: #ff8f57;
   --color-mai-navy: #0f172a;
-  --font-sans: var(--font-figtree);
-  --font-display: var(--font-cormorant);
+  --font-sans: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-display: Georgia, "Times New Roman", serif;
 }
 
 body {
