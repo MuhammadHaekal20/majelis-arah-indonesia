@@ -1,129 +1,127 @@
-import { ExternalLink, Globe, Mail, MapPin, Share2 } from "lucide-react";
-import { KontakForm } from "@/components/kontak/KontakForm";
-import { prisma } from "@/lib/prisma";
+import { MapPin, Phone } from "lucide-react";
 
-async function getSettings() {
-  const rows = await prisma.pengaturanWeb.findMany().catch(() => {
-    console.warn("[KontakPage] Database tidak tersedia.");
-    return [];
-  });
-  return Object.fromEntries(rows.map((row) => [row.key, row.value]));
-}
+const CONTACT = {
+  org: "Majelis Arah Indonesia",
+  addressLines: [
+    "Jl. Pengukiran III Gg. 1 No. 19",
+    "RT 4 / RW 3, Pekojan",
+    "Kec. Tambora, Jakarta Barat 11240",
+  ],
+  phoneDisplay: "0813-5631-5423",
+  phoneTel: "+6281356315423",
+  mapsUrl:
+    "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(
+      "Jl Pengukiran III Gg 1 No 19 RT 4 RW 3 Pekojan Kec Tambora Jakarta Barat 11240",
+    ),
+} as const;
 
-const SOCIAL_META = [
-  { key: "ig", label: "Instagram" },
-  { key: "x", label: "X (Twitter)" },
-  { key: "youtube", label: "YouTube" },
-  { key: "facebook", label: "Facebook" },
-] as const;
-
-export default async function KontakPage() {
-  const settings = await getSettings();
-  const email = settings.email || "admin@mai.com";
-  const alamat = settings.alamat || "Indonesia";
-  const socials = SOCIAL_META.filter((item) => settings[item.key]?.trim());
-
+export default function KontakPage() {
   return (
-    <div className="bg-slate-50">
-      <section className="border-b border-slate-100 bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-          <p className="text-xs font-semibold tracking-[0.24em] text-mai-red uppercase">
+    <div className="bg-white">
+      <section className="relative overflow-hidden border-b border-slate-100 bg-slate-50">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(65,182,226,0.14),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(117,177,61,0.12),transparent_50%)]"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-[#C4A35A] via-mai-green to-mai-blue"
+        />
+        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+          <p className="mai-fade text-xs font-semibold tracking-[0.24em] text-mai-red uppercase">
             Hubungi kami
           </p>
-          <h1 className="mt-3 max-w-3xl font-[family-name:var(--font-display)] text-4xl text-mai-dark sm:text-5xl md:text-6xl">
-            Mari membangun dialog gagasan bersama
+          <h1 className="mai-rise mt-3 max-w-3xl font-[family-name:var(--font-display)] text-4xl leading-tight text-mai-dark sm:text-5xl md:text-6xl">
+            Sekretariat Majelis Arah Indonesia
           </h1>
-          <p className="mt-4 max-w-2xl text-lg text-slate-600">
-            Sampaikan pertanyaan, kolaborasi, atau masukan untuk Majelis Arah
-            Indonesia.
+          <p
+            className="mai-rise mt-4 max-w-2xl text-lg leading-relaxed text-slate-600"
+            style={{ animationDelay: "80ms" }}
+          >
+            Silakan datang langsung atau hubungi nomor di bawah untuk pertanyaan,
+            undangan, dan kerja sama.
           </p>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-          <div className="space-y-10">
-            <div>
-              <p className="text-xs font-semibold tracking-[0.2em] text-mai-blue uppercase">
-                Informasi kontak
-              </p>
-              <h2 className="mt-3 font-[family-name:var(--font-display)] text-3xl text-mai-dark sm:text-4xl">
-                Tim sekretariat siap membantu
-              </h2>
-            </div>
-
-            <a
-              href={`mailto:${email}`}
-              className="group flex items-start gap-4 rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition hover:border-mai-green/40 hover:shadow-md"
-            >
-              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-mai-dark text-mai-green">
-                <Mail className="h-5 w-5" />
-              </span>
-              <div>
-                <p className="text-sm text-slate-500">Email resmi</p>
-                <p className="mt-1 font-[family-name:var(--font-display)] text-2xl text-mai-dark transition group-hover:text-mai-green">
-                  {email}
-                </p>
+      <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
+        <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
+          <div className="mai-rise lg:col-span-7">
+            <article className="relative overflow-hidden rounded-2xl border border-slate-100 bg-slate-50">
+              <div
+                aria-hidden
+                className="absolute inset-y-0 left-0 w-1.5 bg-gradient-to-b from-[#C4A35A] via-mai-green to-mai-blue"
+              />
+              <div className="p-8 pl-10 sm:p-10 sm:pl-12">
+                <div className="flex items-start gap-4">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-mai-dark text-mai-blue">
+                    <MapPin className="h-5 w-5" aria-hidden />
+                  </span>
+                  <div>
+                    <p className="text-xs font-semibold tracking-[0.2em] text-mai-blue uppercase">
+                      Alamat
+                    </p>
+                    <p className="mt-2 font-[family-name:var(--font-display)] text-2xl text-mai-dark sm:text-3xl">
+                      {CONTACT.org}
+                    </p>
+                    <address className="mt-4 space-y-1 not-italic text-base leading-relaxed text-slate-600 sm:text-lg">
+                      {CONTACT.addressLines.map((line) => (
+                        <p key={line}>{line}</p>
+                      ))}
+                    </address>
+                    <a
+                      href={CONTACT.mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-mai-blue transition hover:text-mai-dark"
+                    >
+                      Buka di Google Maps
+                      <span aria-hidden>→</span>
+                    </a>
+                  </div>
+                </div>
               </div>
-            </a>
+            </article>
+          </div>
 
-            <div className="flex items-start gap-4 rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
-              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-mai-dark text-mai-blue">
-                <MapPin className="h-5 w-5" />
-              </span>
-              <div>
-                <p className="text-sm text-slate-500">Alamat</p>
-                <p className="mt-1 whitespace-pre-wrap font-[family-name:var(--font-display)] text-2xl leading-snug text-mai-dark">
-                  {alamat}
-                </p>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
-              <div className="flex items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-mai-dark text-mai-red">
-                  <Share2 className="h-5 w-5" />
+          <div
+            className="mai-rise flex flex-col gap-6 lg:col-span-5"
+            style={{ animationDelay: "100ms" }}
+          >
+            <article className="rounded-2xl border border-slate-100 bg-white p-8 shadow-sm sm:p-10">
+              <div className="flex items-start gap-4">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-mai-dark text-mai-green">
+                  <Phone className="h-5 w-5" aria-hidden />
                 </span>
                 <div>
-                  <p className="text-sm text-slate-500">Media sosial</p>
-                  <p className="font-[family-name:var(--font-display)] text-xl text-mai-dark">
-                    Kanal resmi MAI
+                  <p className="text-xs font-semibold tracking-[0.2em] text-mai-green uppercase">
+                    Telepon / WhatsApp
+                  </p>
+                  <a
+                    href={`tel:${CONTACT.phoneTel}`}
+                    className="mt-3 block font-[family-name:var(--font-display)] text-3xl tracking-wide text-mai-dark transition hover:text-mai-green sm:text-4xl"
+                  >
+                    {CONTACT.phoneDisplay}
+                  </a>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-500">
+                    Hubungi sekretariat pada hari kerja untuk informasi resmi
+                    organisasi.
                   </p>
                 </div>
               </div>
+            </article>
 
-              {socials.length === 0 ? (
-                <p className="mt-5 text-sm text-slate-500">
-                  Tautan media sosial belum diatur di CMS Pengaturan.
-                </p>
-              ) : (
-                <div className="mt-5 flex flex-wrap gap-3">
-                  {socials.map((item) => (
-                    <a
-                      key={item.key}
-                      href={settings[item.key]}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 transition hover:border-mai-blue hover:text-mai-blue"
-                    >
-                      {item.key === "ig" || item.key === "youtube" ? (
-                        <Globe className="h-4 w-4" />
-                      ) : (
-                        <ExternalLink className="h-4 w-4" />
-                      )}
-                      {item.label}
-                    </a>
-                  ))}
-                </div>
-              )}
+            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/80 px-8 py-7 sm:px-10">
+              <p className="text-xs font-semibold tracking-[0.18em] text-mai-red uppercase">
+                Catatan
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-slate-600">
+                Untuk undangan kegiatan atau kerja sama kelembagaan, cantumkan
+                nama lembaga, keperluan, dan waktu yang diusulkan saat menghubungi
+                nomor di atas.
+              </p>
             </div>
-          </div>
-
-          <div>
-            <p className="mb-4 text-xs font-semibold tracking-[0.2em] text-mai-green uppercase">
-              Formulir pesan
-            </p>
-            <KontakForm />
           </div>
         </div>
       </section>
