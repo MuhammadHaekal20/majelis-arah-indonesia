@@ -20,7 +20,7 @@ export default function PresidiumPage() {
             Dewan Presidium
           </p>
           <h1 className="mai-rise mt-4 max-w-3xl font-[family-name:var(--font-display)] text-4xl leading-tight text-mai-dark sm:text-5xl md:text-6xl">
-            Sembilan arah, satu majelis
+            Sembilan presidium, satu majelis, satu arah
           </h1>
           <p
             className="mai-rise mt-5 max-w-2xl text-lg leading-relaxed text-slate-600"
