@@ -1,10 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StatusModerasi } from "@/app/generated/prisma/client";
 import { CoverImage } from "@/components/media/CoverImage";
 import { FormKomentar } from "@/components/publikasi/FormKomentar";
-import { normalizeArticleHtml } from "@/lib/html";
+import { normalizeArticleHtml, stripHtml } from "@/lib/html";
 import { prisma } from "@/lib/prisma";
+import {
+  absoluteMediaUrl,
+  resolvePublikasiCover,
+} from "@/lib/publikasi-media";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -18,6 +23,43 @@ function formatDate(date: Date) {
     hour: "2-digit",
     minute: "2-digit",
   }).format(date);
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const item = await prisma.publikasi
+    .findUnique({
+      where: { slug },
+      select: { judul: true, excerpt: true, cover_url: true, konten: true },
+    })
+    .catch(() => null);
+
+  if (!item) {
+    return { title: "Artikel tidak ditemukan" };
+  }
+
+  const cover = resolvePublikasiCover(item.cover_url, item.konten);
+  const description = item.excerpt || stripHtml(item.konten).slice(0, 160);
+  const image = absoluteMediaUrl(cover);
+
+  return {
+    title: item.judul,
+    description,
+    openGraph: {
+      title: item.judul,
+      description,
+      type: "article",
+      images: [{ url: image, alt: item.judul }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: item.judul,
+      description,
+      images: [image],
+    },
+  };
 }
 
 export default async function PublikasiDetailPage({ params }: PageProps) {
@@ -43,6 +85,8 @@ export default async function PublikasiDetailPage({ params }: PageProps) {
   if (!item) {
     notFound();
   }
+
+  const coverSrc = resolvePublikasiCover(item.cover_url, item.konten);
 
   return (
     <article className="bg-white">
@@ -72,10 +116,10 @@ export default async function PublikasiDetailPage({ params }: PageProps) {
       <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
         <div className="relative mb-10 aspect-[16/9] overflow-hidden rounded-xl bg-slate-100">
           <CoverImage
-            src={item.cover_url}
+            src={coverSrc}
             alt={item.judul}
             fill
-            className="object-cover"
+            className="object-cover object-center"
             sizes="(max-width: 768px) 100vw, 768px"
             priority
           />

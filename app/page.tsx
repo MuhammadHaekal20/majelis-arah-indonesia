@@ -4,6 +4,7 @@ import { StatusModerasi } from "@/app/generated/prisma/client";
 import { CoverImage } from "@/components/media/CoverImage";
 import { stripHtml } from "@/lib/html";
 import { prisma } from "@/lib/prisma";
+import { resolvePublikasiCover } from "@/lib/publikasi-media";
 
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("id-ID", {
@@ -164,7 +165,7 @@ export default async function HomePage() {
                   >
                     <div className="relative aspect-video w-full overflow-hidden bg-slate-100">
                       <CoverImage
-                        src={item.cover_url}
+                        src={resolvePublikasiCover(item.cover_url, item.konten)}
                         alt={item.judul}
                         fill
                         className="object-cover object-center transition duration-500 group-hover:scale-105"
