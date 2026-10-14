@@ -72,6 +72,15 @@ model Publikasi {
   diskusi Diskusi[]
 }
 
+/// Upload tahan redeploy Hostinger (public/uploads ikut terhapus saat deploy).
+model MediaAsset {
+  id         String   @id @default(cuid())
+  filename   String   @unique
+  mime_type  String   @db.VarChar(128)
+  bytes      Bytes    @db.LongBlob
+  created_at DateTime @default(now())
+}
+
 model Diskusi {
   id              String         @id @default(cuid())
   konten          String         @db.Text
