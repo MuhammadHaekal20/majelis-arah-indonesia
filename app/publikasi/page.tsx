@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CoverImage } from "@/components/media/CoverImage";
 import { prisma } from "@/lib/prisma";
+import { resolvePublikasiCover } from "@/lib/publikasi-media";
 
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("id-ID", {
@@ -48,10 +49,10 @@ export default async function PublikasiPage() {
                 <Link href={`/publikasi/${item.slug}`} className="block">
                   <div className="relative aspect-[16/10] bg-slate-100">
                     <CoverImage
-                      src={item.cover_url}
+                      src={resolvePublikasiCover(item.cover_url, item.konten)}
                       alt={item.judul}
                       fill
-                      className="object-cover"
+                      className="object-cover object-center"
                       sizes="(max-width: 768px) 100vw, 33vw"
                     />
                   </div>
