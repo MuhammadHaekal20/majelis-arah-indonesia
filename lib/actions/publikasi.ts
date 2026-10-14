@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/authOptions";
+import { normalizeArticleHtml } from "@/lib/html";
 import { prisma } from "@/lib/prisma";
 import { saveUploadedFile } from "@/lib/upload";
 
@@ -68,7 +69,9 @@ export async function createPublikasi(
 
   const judul = String(formData.get("judul") ?? "").trim();
   const excerpt = String(formData.get("excerpt") ?? "").trim();
-  const konten = String(formData.get("konten") ?? "").trim();
+  const konten = normalizeArticleHtml(
+    String(formData.get("konten") ?? "").trim(),
+  );
   const cover = formData.get("cover");
 
   if (!judul || !excerpt || !konten) {
@@ -118,7 +121,9 @@ export async function updatePublikasi(
 
   const judul = String(formData.get("judul") ?? "").trim();
   const excerpt = String(formData.get("excerpt") ?? "").trim();
-  const konten = String(formData.get("konten") ?? "").trim();
+  const konten = normalizeArticleHtml(
+    String(formData.get("konten") ?? "").trim(),
+  );
   const cover = formData.get("cover");
 
   if (!judul || !excerpt || !konten) {

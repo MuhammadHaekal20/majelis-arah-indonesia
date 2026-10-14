@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { CoverImage } from "@/components/media/CoverImage";
 import { prisma } from "@/lib/prisma";
 
 function formatDate(date: Date) {
@@ -47,7 +47,7 @@ export default async function PublikasiPage() {
               >
                 <Link href={`/publikasi/${item.slug}`} className="block">
                   <div className="relative aspect-[16/10] bg-slate-100">
-                    <Image
+                    <CoverImage
                       src={item.cover_url}
                       alt={item.judul}
                       fill

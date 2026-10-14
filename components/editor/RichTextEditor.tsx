@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 import "react-quill-new/dist/quill.snow.css";
+import { normalizeArticleHtml } from "@/lib/html";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), {
   ssr: false,
@@ -88,7 +89,7 @@ export function RichTextEditor({
       <ReactQuill
         theme="snow"
         value={value}
-        onChange={onChange}
+        onChange={(next) => onChange(normalizeArticleHtml(next))}
         modules={modules}
         placeholder={placeholder}
       />

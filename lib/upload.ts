@@ -20,7 +20,9 @@ export async function saveUploadedFile(file: File): Promise<string> {
     throw new Error("Ukuran file maksimal 5MB.");
   }
 
-  const extension = path.extname(file.name).toLowerCase() || guessExtension(file.type);
+  // Pakai ekstensi dari MIME, bukan nama file — .jpeg berisi WebP
+  // membuat next/image mengembalikan 400 "isn't a valid image".
+  const extension = guessExtension(file.type);
   const filename = `${Date.now()}-${randomUUID().slice(0, 8)}${extension}`;
   const uploadDir = path.join(process.cwd(), "public", "uploads");
 
