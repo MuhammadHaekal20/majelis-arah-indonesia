@@ -12,7 +12,8 @@ export default async function BuatGagasanPage() {
   }
 
   const role = session.user.role;
-  const canSubmit = role === "MEMBER" || role === "ADMIN";
+  const isAdmin = role === "ADMIN";
+  const canSubmit = role === "MEMBER" || isAdmin;
 
   return (
     <div className="bg-slate-50">
@@ -24,16 +25,17 @@ export default async function BuatGagasanPage() {
           ← Kembali ke Ruang Gagasan
         </Link>
         <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl text-mai-dark">
-          Ajukan Gagasan
+          {isAdmin ? "Publikasikan Gagasan" : "Ajukan Gagasan"}
         </h1>
         <p className="mt-2 text-sm text-slate-500">
-          Gagasan baru akan berstatus pending dan baru tayang setelah disetujui
-          admin.
+          {isAdmin
+            ? "Sebagai admin, gagasan yang Anda buat langsung tayang di Ruang Gagasan."
+            : "Gagasan baru akan berstatus pending dan baru tayang setelah disetujui admin."}
         </p>
 
         <div className="mt-8">
           {canSubmit ? (
-            <GagasanCreateForm />
+            <GagasanCreateForm isAdmin={isAdmin} />
           ) : (
             <div className="rounded-xl border border-dashed border-slate-200 bg-white p-6 text-sm text-slate-600">
               Akun Anda telah login, tetapi pengajuan gagasan hanya tersedia

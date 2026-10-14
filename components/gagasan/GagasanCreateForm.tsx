@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { useActionState } from "react";
 import {
   createGagasan,
@@ -10,35 +9,16 @@ import {
 
 const initialState: GagasanActionState = { ok: false, message: "" };
 
-export function GagasanCreateForm() {
-  const { data: session, status } = useSession();
+type GagasanCreateFormProps = {
+  /** Admin: gagasan langsung tayang tanpa antre moderasi. */
+  isAdmin?: boolean;
+};
+
+export function GagasanCreateForm({ isAdmin = false }: GagasanCreateFormProps) {
   const [state, formAction, pending] = useActionState(
     createGagasan,
     initialState,
   );
-
-  const canSubmit =
-    session?.user?.role === "MEMBER" || session?.user?.role === "ADMIN";
-
-  if (status === "loading") {
-    return <p className="text-sm text-slate-500">Memuat sesi…</p>;
-  }
-
-  if (!canSubmit) {
-    return (
-      <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center">
-        <p className="text-sm text-slate-600">
-          Pengajuan gagasan hanya untuk akun{" "}
-          <strong className="text-mai-dark">MEMBER</strong> atau{" "}
-          <strong className="text-mai-dark">ADMIN</strong>.{" "}
-          <Link href="/login" className="text-mai-blue hover:underline">
-            Masuk
-          </Link>{" "}
-          dengan akun yang sesuai.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <form action={formAction} className="space-y-5">
@@ -77,7 +57,11 @@ export function GagasanCreateForm() {
           disabled={pending}
           className="rounded-lg bg-mai-green px-4 py-2 text-sm font-medium text-white transition hover:bg-[#5A8F2E] disabled:opacity-60"
         >
-          {pending ? "Mengirim…" : "Ajukan Gagasan"}
+          {pending
+            ? "Mengirim…"
+            : isAdmin
+              ? "Publikasikan Gagasan"
+              : "Ajukan Gagasan"}
         </button>
         <Link
           href="/ruang-gagasan"

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { adminActionClass } from "@/components/admin/AdminButton";
 import { moderateGagasan } from "@/lib/actions/gagasan";
 import { prisma } from "@/lib/prisma";
@@ -24,13 +25,21 @@ export default async function AdminGagasanPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="font-[family-name:var(--font-display)] text-3xl text-mai-dark">
-          Moderasi Gagasan
-        </h2>
-        <p className="mt-2 text-sm text-slate-500">
-          Tinjau pengajuan gagasan yang menunggu persetujuan.
-        </p>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h2 className="font-[family-name:var(--font-display)] text-3xl text-mai-dark">
+            Moderasi Gagasan
+          </h2>
+          <p className="mt-2 text-sm text-slate-500">
+            Tinjau pengajuan gagasan yang menunggu persetujuan.
+          </p>
+        </div>
+        <Link
+          href="/ruang-gagasan/buat"
+          className={adminActionClass("primary")}
+        >
+          Buat gagasan
+        </Link>
       </div>
 
       <div className="overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm">
