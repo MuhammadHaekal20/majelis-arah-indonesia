@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Quote } from "lucide-react";
 import { StatusModerasi } from "@/app/generated/prisma/client";
 import { CoverImage } from "@/components/media/CoverImage";
+import { stripHtml } from "@/lib/html";
 import { prisma } from "@/lib/prisma";
 
 function formatDate(date: Date) {
@@ -230,7 +231,7 @@ export default async function HomePage() {
                       {item.judul}
                     </h3>
                     <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate-600">
-                      {item.konten}
+                      {stripHtml(item.konten)}
                     </p>
                   </div>
                   <div className="mt-6 border-t border-slate-100 pt-4">

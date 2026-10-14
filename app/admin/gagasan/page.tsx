@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { StatusModerasi } from "@/app/generated/prisma/client";
 import { adminActionClass } from "@/components/admin/AdminButton";
 import { moderateGagasan } from "@/lib/actions/gagasan";
+import { stripHtml } from "@/lib/html";
 import { prisma } from "@/lib/prisma";
-import { StatusModerasi } from "@/app/generated/prisma/client";
 
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("id-ID", {
@@ -74,9 +75,7 @@ export default async function AdminGagasanPage() {
                       {item.judul}
                     </td>
                     <td className="max-w-sm px-4 py-3 text-slate-700">
-                      <p className="line-clamp-4 whitespace-pre-wrap">
-                        {item.konten}
-                      </p>
+                      <p className="line-clamp-4">{stripHtml(item.konten)}</p>
                     </td>
                     <td className="px-4 py-3 text-slate-600">
                       <p>{item.author.name}</p>

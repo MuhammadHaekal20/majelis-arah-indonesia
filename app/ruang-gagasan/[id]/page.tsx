@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StatusModerasi } from "@/app/generated/prisma/client";
 import { FormBalasanGagasan } from "@/components/gagasan/FormBalasanGagasan";
+import { toDisplayHtml } from "@/lib/html";
 import { prisma } from "@/lib/prisma";
 
 type PageProps = {
@@ -65,9 +66,10 @@ export default async function GagasanDetailPage({ params }: PageProps) {
       </div>
 
       <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
-        <div className="prose prose-slate max-w-none whitespace-pre-wrap prose-headings:font-[family-name:var(--font-display)] prose-headings:text-mai-dark prose-a:text-mai-blue prose-p:leading-relaxed">
-          {gagasan.konten}
-        </div>
+        <div
+          className="article-prose prose prose-slate max-w-none prose-headings:font-[family-name:var(--font-display)] prose-headings:text-mai-dark prose-a:text-mai-blue prose-img:rounded-xl prose-p:leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: toDisplayHtml(gagasan.konten) }}
+        />
 
         <section className="mt-14 border-t border-slate-100 pt-10">
           <div>

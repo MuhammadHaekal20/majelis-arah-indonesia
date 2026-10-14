@@ -29,8 +29,8 @@ export default async function BuatGagasanPage() {
         </h1>
         <p className="mt-2 text-sm text-slate-500">
           {isAdmin
-            ? "Sebagai admin, gagasan yang Anda buat langsung tayang di Ruang Gagasan."
-            : "Gagasan baru akan berstatus pending dan baru tayang setelah disetujui admin."}
+            ? "Sebagai admin, gagasan langsung tayang. Tulis di editor WYSIWYG atau impor dari Word (.docx)."
+            : "Tulis di editor WYSIWYG atau impor dari Word (.docx). Pengajuan berstatus pending sampai disetujui admin."}
         </p>
 
         <div className="mt-8">
