@@ -71,6 +71,7 @@ export async function markPesanRead(id: string) {
   });
 
   revalidatePath("/admin/pesan");
+  revalidatePath(`/admin/pesan/${id}`);
 }
 
 export async function deletePesan(id: string) {
@@ -81,6 +82,7 @@ export async function deletePesan(id: string) {
 
   await prisma.pesanKontak.delete({ where: { id } });
   revalidatePath("/admin/pesan");
+  revalidatePath(`/admin/pesan/${id}`);
 }
 
 export type PengaturanActionState = {

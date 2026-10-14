@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { adminActionClass } from "@/components/admin/AdminButton";
 import { deletePesan, markPesanRead } from "@/lib/actions/kontak";
 import { prisma } from "@/lib/prisma";
@@ -32,8 +33,8 @@ export default async function AdminPesanPage() {
         </h2>
         <p className="mt-2 text-sm text-slate-500">
           {unread > 0
-            ? `${unread} pesan belum dibaca dari formulir kontak.`
-            : "Semua pesan sudah ditandai dibaca."}
+            ? `${unread} pesan belum dibaca dari formulir kontak. Klik Baca untuk isi lengkap.`
+            : "Semua pesan sudah ditandai dibaca. Klik Baca untuk isi lengkap."}
         </p>
       </div>
 
@@ -92,13 +93,24 @@ export default async function AdminPesanPage() {
                       </a>
                     </td>
                     <td className="max-w-xs px-4 py-3 text-slate-700">
-                      <p title={item.pesan}>{truncate(item.pesan)}</p>
+                      <Link
+                        href={`/admin/pesan/${item.id}`}
+                        className="hover:text-mai-blue hover:underline"
+                      >
+                        {truncate(item.pesan)}
+                      </Link>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-slate-600">
                       {formatDate(item.created_at)}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-2">
+                        <Link
+                          href={`/admin/pesan/${item.id}`}
+                          className={adminActionClass("primary")}
+                        >
+                          Baca
+                        </Link>
                         {!item.is_read ? (
                           <form action={markPesanRead.bind(null, item.id)}>
                             <button
