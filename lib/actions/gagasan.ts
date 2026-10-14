@@ -43,20 +43,27 @@ export async function createGagasan(
     return { ok: false, message: "Judul dan konten wajib diisi." };
   }
 
-  await prisma.gagasanThread.create({
+  // Admin memoderasi sendiri — langsung APPROVED agar tampil di forum.
+  const isAdmin = role === "ADMIN";
+  const created = await prisma.gagasanThread.create({
     data: {
       judul,
       konten,
       author_id: session.user.id,
-      status_moderasi: StatusModerasi.PENDING,
+      status_moderasi: isAdmin
+        ? StatusModerasi.APPROVED
+        : StatusModerasi.PENDING,
     },
   });
 
-  await sendAdminNotification("gagasan", judul);
+  if (!isAdmin) {
+    await sendAdminNotification("gagasan", judul);
+  }
 
   revalidatePath("/ruang-gagasan");
   revalidatePath("/admin/gagasan");
-  redirect("/ruang-gagasan");
+  revalidatePath(`/ruang-gagasan/${created.id}`);
+  redirect(isAdmin ? `/ruang-gagasan/${created.id}` : "/ruang-gagasan");
 }
 
 export async function moderateGagasan(
