@@ -3,6 +3,7 @@ import { Quote } from "lucide-react";
 import { getServerSession } from "next-auth";
 import { StatusModerasi } from "@/app/generated/prisma/client";
 import { authOptions } from "@/lib/authOptions";
+import { stripHtml } from "@/lib/html";
 import { prisma } from "@/lib/prisma";
 
 function formatDate(date: Date) {
@@ -11,10 +12,6 @@ function formatDate(date: Date) {
     month: "long",
     year: "numeric",
   }).format(date);
-}
-
-function stripHtml(html: string) {
-  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
 export default async function RuangGagasanPage() {

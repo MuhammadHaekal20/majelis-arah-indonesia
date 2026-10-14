@@ -6,7 +6,8 @@ import { saveUploadedFile } from "@/lib/upload";
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
 
-  if (!session?.user || session.user.role !== "ADMIN") {
+  const role = session?.user?.role;
+  if (!session?.user || (role !== "ADMIN" && role !== "MEMBER")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

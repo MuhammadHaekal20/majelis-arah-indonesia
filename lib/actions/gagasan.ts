@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/authOptions";
+import { isBlankHtml, normalizeArticleHtml } from "@/lib/html";
 import { sendAdminNotification, sendUserNotification } from "@/lib/mail";
 import { prisma } from "@/lib/prisma";
 
@@ -37,9 +38,11 @@ export async function createGagasan(
   }
 
   const judul = String(formData.get("judul") ?? "").trim();
-  const konten = String(formData.get("konten") ?? "").trim();
+  const konten = normalizeArticleHtml(
+    String(formData.get("konten") ?? "").trim(),
+  );
 
-  if (!judul || !konten) {
+  if (!judul || isBlankHtml(konten)) {
     return { ok: false, message: "Judul dan konten wajib diisi." };
   }
 
