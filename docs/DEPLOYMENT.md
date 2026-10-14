@@ -66,6 +66,7 @@ Syarat: paket **Business atau Cloud** ([syarat resmi](https://www.hostinger.com/
 4. Isi environment variables di atas. Database: **PostgreSQL** yang sudah ada di env (jangan ganti ke MySQL/MariaDB hPanel).
 5. Domain: `arahindonesia.org`.
 6. Setelah live: ganti password admin seed; jangan jalankan `db seed` di produksi.
+7. Setelah pull yang menambah model Prisma (mis. `MediaAsset`): jalankan `npx prisma db push` di lingkungan produksi (belum ada folder `prisma/migrations`). Upload gambar disimpan di DB supaya tidak hilang saat redeploy.
 
 ## Opsi B — Vercel + DNS Hostinger
 

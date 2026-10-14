@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
+import { prisma } from "@/lib/prisma";
 
 const ALLOWED_TYPES = new Set([
   "image/jpeg",
@@ -11,6 +12,12 @@ const ALLOWED_TYPES = new Set([
 
 const MAX_BYTES = 5 * 1024 * 1024;
 
+const SAFE_FILENAME = /^[a-zA-Z0-9._-]+$/;
+
+export function isSafeUploadFilename(filename: string) {
+  return SAFE_FILENAME.test(filename);
+}
+
 export async function saveUploadedFile(file: File): Promise<string> {
   if (!ALLOWED_TYPES.has(file.type)) {
     throw new Error("Tipe file tidak didukung. Gunakan JPG, PNG, WEBP, atau GIF.");
@@ -20,16 +27,27 @@ export async function saveUploadedFile(file: File): Promise<string> {
     throw new Error("Ukuran file maksimal 5MB.");
   }
 
-  // Pakai ekstensi dari MIME, bukan nama file — .jpeg berisi WebP
-  // membuat next/image mengembalikan 400 "isn't a valid image".
+  // Ekstensi dari MIME agar isi file cocok dengan nama.
   const extension = guessExtension(file.type);
   const filename = `${Date.now()}-${randomUUID().slice(0, 8)}${extension}`;
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-
-  await mkdir(uploadDir, { recursive: true });
-
   const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(path.join(uploadDir, filename), buffer);
+
+  // Utama: DB (survive redeploy). Disk opsional untuk dev lokal.
+  await prisma.mediaAsset.create({
+    data: {
+      filename,
+      mime_type: file.type || "application/octet-stream",
+      bytes: buffer,
+    },
+  });
+
+  try {
+    const uploadDir = path.join(process.cwd(), "public", "uploads");
+    await mkdir(uploadDir, { recursive: true });
+    await writeFile(path.join(uploadDir, filename), buffer);
+  } catch (error) {
+    console.warn("[upload] Gagal menulis ke disk (lanjut pakai DB):", error);
+  }
 
   return `/uploads/${filename}`;
 }
