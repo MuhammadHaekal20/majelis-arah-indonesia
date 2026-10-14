@@ -1,8 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StatusModerasi } from "@/app/generated/prisma/client";
+import { CoverImage } from "@/components/media/CoverImage";
 import { FormKomentar } from "@/components/publikasi/FormKomentar";
+import { normalizeArticleHtml } from "@/lib/html";
 import { prisma } from "@/lib/prisma";
 
 type PageProps = {
@@ -70,7 +71,7 @@ export default async function PublikasiDetailPage({ params }: PageProps) {
 
       <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
         <div className="relative mb-10 aspect-[16/9] overflow-hidden rounded-xl bg-slate-100">
-          <Image
+          <CoverImage
             src={item.cover_url}
             alt={item.judul}
             fill
@@ -81,8 +82,10 @@ export default async function PublikasiDetailPage({ params }: PageProps) {
         </div>
 
         <div
-          className="prose prose-slate max-w-none prose-headings:font-[family-name:var(--font-display)] prose-headings:text-mai-dark prose-a:text-mai-blue prose-img:rounded-xl"
-          dangerouslySetInnerHTML={{ __html: item.konten }}
+          className="article-prose prose prose-slate max-w-none prose-headings:font-[family-name:var(--font-display)] prose-headings:text-mai-dark prose-a:text-mai-blue prose-img:rounded-xl"
+          dangerouslySetInnerHTML={{
+            __html: normalizeArticleHtml(item.konten),
+          }}
         />
 
         <section className="mt-14 border-t border-slate-100 pt-10">

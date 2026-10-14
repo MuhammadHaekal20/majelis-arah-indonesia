@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { AdminButton } from "@/components/admin/AdminButton";
 import { RichTextEditor } from "@/components/editor/RichTextEditor";
+import { CoverImage } from "@/components/media/CoverImage";
 import {
   updatePublikasi,
   type PublikasiActionState,
@@ -66,7 +66,7 @@ export function PublikasiEditForm({ id, initial }: PublikasiEditFormProps) {
             </span>
             {initial.cover_url ? (
               <div className="relative mb-3 aspect-[16/9] max-w-md overflow-hidden rounded-lg border border-slate-100 bg-slate-50">
-                <Image
+                <CoverImage
                   src={initial.cover_url}
                   alt="Cover saat ini"
                   fill

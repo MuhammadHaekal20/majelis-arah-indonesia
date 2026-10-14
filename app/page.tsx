@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Quote } from "lucide-react";
 import { StatusModerasi } from "@/app/generated/prisma/client";
+import { CoverImage } from "@/components/media/CoverImage";
 import { prisma } from "@/lib/prisma";
 
 function formatDate(date: Date) {
@@ -162,7 +162,7 @@ export default async function HomePage() {
                     className="flex h-full flex-col"
                   >
                     <div className="relative aspect-video w-full overflow-hidden bg-slate-100">
-                      <Image
+                      <CoverImage
                         src={item.cover_url}
                         alt={item.judul}
                         fill

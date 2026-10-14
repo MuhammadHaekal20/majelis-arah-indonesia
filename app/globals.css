@@ -93,3 +93,19 @@ body {
   max-width: 100%;
   border-radius: 0.5rem;
 }
+
+/* Artikel: cegah &nbsp;/konten lebar mendorong halaman ke kanan */
+.article-prose {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.article-prose :where(p, li, h1, h2, h3, h4, h5, h6, td, th, blockquote) {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.article-prose :where(img, video, iframe, table, pre) {
+  max-width: 100%;
+  height: auto;
+}
