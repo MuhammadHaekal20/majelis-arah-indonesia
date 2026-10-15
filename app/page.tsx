@@ -54,7 +54,7 @@ export default async function HomePage() {
       <section className="overflow-hidden bg-white">
         <div className="relative aspect-[1024/426] w-full bg-slate-100">
           <Image
-            src="/hero-beranda.png"
+            src="/hero-beranda.jpg"
             alt="Dewan Presidium Majelis Arah Indonesia"
             fill
             priority
