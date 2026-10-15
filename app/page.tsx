@@ -50,47 +50,49 @@ export default async function HomePage() {
 
   return (
     <div className="bg-white">
-      {/* Hero */}
-      <section className="relative min-h-[calc(100vh-4rem)] overflow-hidden bg-mai-dark">
-        <Image
-          src="/hero-beranda.jpg"
-          alt="Dewan Presidium Majelis Arah Indonesia"
-          fill
-          priority
-          className="object-cover object-[center_30%] mai-fade"
-          sizes="100vw"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-mai-dark via-mai-dark/55 to-mai-dark/15"
-        />
-        <div className="relative mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl flex-col justify-end px-4 pb-16 pt-28 sm:px-6 sm:pb-20">
-          <h1 className="mai-rise max-w-3xl font-[family-name:var(--font-display)] text-5xl leading-[1.05] text-white sm:text-6xl md:text-7xl">
-            Majelis Arah Indonesia
-          </h1>
-          <p
-            className="mai-rise mt-5 max-w-2xl text-lg leading-relaxed text-white/90 sm:text-xl"
-            style={{ animationDelay: "80ms" }}
-          >
-            Menyatukan gagasan, menguatkan arah, dan menghadirkan manfaat bagi
-            umat, bangsa, dan negara.
-          </p>
-          <div
-            className="mai-rise mt-8 flex flex-wrap gap-3"
-            style={{ animationDelay: "140ms" }}
-          >
-            <Link
-              href="/publikasi"
-              className="bg-mai-green px-5 py-3 text-sm font-medium text-white transition hover:bg-[#5A8F2E]"
+      {/* Hero — rasio mengikuti banner 1024×426 (~2.4:1) */}
+      <section className="overflow-hidden bg-white">
+        <div className="relative aspect-[1024/426] w-full bg-slate-100">
+          <Image
+            src="/hero-beranda.png"
+            alt="Dewan Presidium Majelis Arah Indonesia"
+            fill
+            priority
+            className="object-cover object-center mai-fade"
+            sizes="100vw"
+          />
+        </div>
+        <div className="border-b border-slate-100 bg-slate-50">
+          <div className="mx-auto flex max-w-6xl flex-col gap-5 px-4 py-8 sm:flex-row sm:items-end sm:justify-between sm:px-6 sm:py-10">
+            <div className="max-w-2xl">
+              <h1 className="mai-rise font-[family-name:var(--font-display)] text-3xl leading-tight text-mai-dark sm:text-4xl md:text-5xl">
+                Majelis Arah Indonesia
+              </h1>
+              <p
+                className="mai-rise mt-3 text-base leading-relaxed text-slate-600 sm:text-lg"
+                style={{ animationDelay: "80ms" }}
+              >
+                Menyatukan gagasan, menguatkan arah, dan menghadirkan manfaat
+                bagi umat, bangsa, dan negara.
+              </p>
+            </div>
+            <div
+              className="mai-rise flex flex-wrap gap-3"
+              style={{ animationDelay: "140ms" }}
             >
-              Baca berita
-            </Link>
-            <Link
-              href="/tentang"
-              className="border border-white/80 bg-white/10 px-5 py-3 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-white/20"
-            >
-              Tentang MAI
-            </Link>
+              <Link
+                href="/publikasi"
+                className="bg-mai-green px-5 py-3 text-sm font-medium text-white transition hover:bg-[#5A8F2E]"
+              >
+                Baca berita
+              </Link>
+              <Link
+                href="/tentang"
+                className="border border-mai-blue bg-white px-5 py-3 text-sm font-medium text-mai-blue transition hover:bg-mai-blue/5"
+              >
+                Tentang MAI
+              </Link>
+            </div>
           </div>
         </div>
       </section>
