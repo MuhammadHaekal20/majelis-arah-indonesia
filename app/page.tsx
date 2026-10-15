@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Quote } from "lucide-react";
 import { StatusModerasi } from "@/app/generated/prisma/client";
@@ -50,26 +51,29 @@ export default async function HomePage() {
   return (
     <div className="bg-white">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-slate-50">
+      <section className="relative min-h-[calc(100vh-4rem)] overflow-hidden bg-mai-dark">
+        <Image
+          src="/hero-beranda.jpg"
+          alt="Dewan Presidium Majelis Arah Indonesia"
+          fill
+          priority
+          className="object-cover object-[center_30%] mai-fade"
+          sizes="100vw"
+        />
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(65,182,226,0.12),transparent_50%),radial-gradient(ellipse_at_bottom_left,rgba(117,177,61,0.1),transparent_45%)]"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-mai-dark via-mai-dark/55 to-mai-dark/15"
         />
-        <div className="relative mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl flex-col justify-center px-4 py-20 sm:px-6">
-          <p className="mai-fade text-xs font-semibold tracking-[0.24em] text-mai-red uppercase">
-            Portal resmi
-          </p>
-          <h1 className="mai-rise mt-4 max-w-3xl font-[family-name:var(--font-display)] text-5xl leading-[1.05] text-mai-dark sm:text-6xl md:text-7xl">
+        <div className="relative mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl flex-col justify-end px-4 pb-16 pt-28 sm:px-6 sm:pb-20">
+          <h1 className="mai-rise max-w-3xl font-[family-name:var(--font-display)] text-5xl leading-[1.05] text-white sm:text-6xl md:text-7xl">
             Majelis Arah Indonesia
           </h1>
           <p
-            className="mai-rise mt-5 max-w-2xl text-lg leading-relaxed text-slate-600 sm:text-xl"
+            className="mai-rise mt-5 max-w-2xl text-lg leading-relaxed text-white/90 sm:text-xl"
             style={{ animationDelay: "80ms" }}
           >
-            Wadah kolaborasi ulama, intelektual,
-            serta profesional yang berkomitmen memberikan arah pemikiran,
-            gagasan strategis, dan solusi konstruktif bagi kemajuan umat,
-            bangsa, dan negara.
+            Menyatukan gagasan, menguatkan arah, dan menghadirkan manfaat bagi
+            umat, bangsa, dan negara.
           </p>
           <div
             className="mai-rise mt-8 flex flex-wrap gap-3"
@@ -83,7 +87,7 @@ export default async function HomePage() {
             </Link>
             <Link
               href="/tentang"
-              className="border border-mai-blue bg-white px-5 py-3 text-sm font-medium text-mai-blue transition hover:bg-mai-blue/5"
+              className="border border-white/80 bg-white/10 px-5 py-3 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-white/20"
             >
               Tentang MAI
             </Link>
