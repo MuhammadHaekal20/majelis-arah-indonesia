@@ -99,6 +99,30 @@ export async function moderateGagasan(
   revalidatePath(`/ruang-gagasan/${id}`);
 }
 
+export async function deleteGagasan(id: string): Promise<void> {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user || session.user.role !== "ADMIN") {
+    throw new Error("Anda tidak berwenang menghapus gagasan.");
+  }
+
+  const existing = await prisma.gagasanThread.findUnique({
+    where: { id },
+    select: { id: true },
+  });
+
+  if (!existing) {
+    throw new Error("Gagasan tidak ditemukan.");
+  }
+
+  await prisma.gagasanThread.delete({ where: { id } });
+
+  revalidatePath("/admin/gagasan");
+  revalidatePath("/ruang-gagasan");
+  revalidatePath(`/ruang-gagasan/${id}`);
+  revalidatePath("/");
+}
+
 export async function createBalasanGagasan(
   _prev: BalasanActionState,
   formData: FormData,
