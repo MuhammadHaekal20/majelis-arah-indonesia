@@ -31,7 +31,7 @@ export default async function BuatGagasanPage() {
           {isAdmin
             ? "Sebagai admin, gagasan langsung tayang. Tulis di editor WYSIWYG atau impor dari Word (.docx)."
             : "Tulis di editor WYSIWYG atau impor dari Word (.docx). Pengajuan berstatus pending sampai disetujui admin."}
-        </p>
+        </p>00
 
         <div className="mt-8">
           {canSubmit ? (

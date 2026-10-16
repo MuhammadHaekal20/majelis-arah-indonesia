@@ -143,7 +143,7 @@ export default async function HomePage() {
                 Berita terkini
               </p>
               <h2 className="mt-2 font-[family-name:var(--font-display)] text-3xl text-mai-dark sm:text-4xl">
-                Wacana &amp; kabar terbaru
+                Kabar Terbaru MAI
               </h2>
             </div>
             <Link
@@ -206,7 +206,7 @@ export default async function HomePage() {
                 Opini &amp; gagasan
               </p>
               <h2 className="mt-2 font-[family-name:var(--font-display)] text-3xl text-mai-dark sm:text-4xl">
-                Suara yang telah disetujui
+                Suara Presidium MAI
               </h2>
             </div>
             <Link
